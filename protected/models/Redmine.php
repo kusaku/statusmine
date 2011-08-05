@@ -1,17 +1,20 @@
 <?php
-# (c) 2011 Thomas Spycher - Zero-One
-# (c) 2011 Krivchikov D.A. - FabricaSaitov.ru
- 
-/**
- * Redmine class.
- * Используется для взаимодействия по средствам API с Redmine (как ни странно).
- * За основу взят класс, разработанный Томасам Спайхером (Thomas Spycher).
- *
- *
- * Пожалуйста! И не благодарите :)
- * В прошлой версии было частично реализовано взаимодействие через прямое обращение к БД.
- * Ни в коем случае не делайте этого! Базу уже один раз чинили - хватит!
- */
+/*
+* This file is part of StatusMine.
+*
+* StatusMine is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* StatusMine is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with MailTeleport. If not, see <http://www.gnu.org/licenses/>.
+*/
 class Redmine
 {
 	private static function runRequest($restUrl, $method = 'GET', $data = "")
