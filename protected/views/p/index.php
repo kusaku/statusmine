@@ -19,19 +19,9 @@
 
 <h1>Welcome to <i><?php echo CHtml::encode(Yii::app()->name); ?></i></h1>
 <?php
-//print_r($issues);
-foreach ($issues as $issue) {
-	print $issue->id.' '.
-			$issue->subject.' '.
-			$issue->updated_on.' '.
-			$issue->author['name'].' '.
-			$issue->done_ratio.'% '.
-			'<img src="'.Redmine::getUserAvatarUrlById( $issue->author['id'] , 20).'">'.
-			' -> '.
-			$issue->assigned_to['name'].
-			'<img src="'.Redmine::getUserAvatarUrlById( $issue->assigned_to['id'] , 20).'">'.
-
-			'<br>';
+//print_r($projects);
+foreach ($projects as $project) {
+	print '<a href="/p/'.$project->id.'">'.$project->name.'</a><br>';
 }
 
 ?>

@@ -43,13 +43,7 @@ class SiteController extends Controller
 	 */
 	public function actionIndex()
 	{
-
-		$issues = Redmine::getIssues();
-
-		// renders the view file 'protected/views/site/index.php'
-		// using the default layout 'protected/views/layouts/main.php'
-		$this->layout = 'main';
-		$this->render('index', array('issues'=>$issues));
+		$this->redirect('/p');
 	}
 
 	/**
@@ -121,28 +115,4 @@ class SiteController extends Controller
 		$this->redirect(Yii::app()->homeUrl);
 	}
 	
-	public function actionImg()
-	{
-		define('FONT_NAME', './css/pushkin.ttf');
-		define('FONT_SIZE', 17);
-
-		$text = Yii::app()->request->getParam('text') ?: 'Ошибка';
-		$coord = imagettfbbox(FONT_SIZE,0,FONT_NAME,$text);
-
-		$width = $coord[2] - $coord[0];
-		$height = $coord[1] - $coord[7];
-
-		$X = 16;
-		$Y = FONT_SIZE;
-		
-		$image = imagecreatetruecolor($width+$X, 45) or die('Cannot create image');
-		$back = imagecolorallocate($image, 222, 179, 134);
-		ImageFilledRectangle($image,0,0,$width+$X,45,$back);
-		imagettftext($image,FONT_SIZE,0,$X, $Y+4,0x000000,FONT_NAME,$text);
-		imagecolortransparent($image, $back);
-		
-		header('Content-type: image/png');
-		imagepng($image); // show or save
-		imagedestroy($image);
-	}
 }

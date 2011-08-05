@@ -120,12 +120,22 @@ class Redmine
 		return false;
 	}
 
-	// http://www.gravatar.com/avatar/9d868bd51327f1f89aa1325da5bd4e13?s=50
+	/**
+	 *	Return Gravatars URL
+	 *
+	 * @param integer $id
+	 * @param integer $size
+	 * @return string
+	 */
 	public static function getUserAvatarUrlById($id, $size = 50) {
-		$user = Redmine::runRequest('/users/'.$id.'.xml', 'GET', '');
-		if ($user->mail)
-		return 'http://www.gravatar.com/avatar/'.md5($user->mail).'?s='.$size;
-		else return false;
+		if ( $id ){
+			$user = Redmine::runRequest('/users/'.$id.'.xml', 'GET', '');
+			if ($user->mail)
+				return 'http://www.gravatar.com/avatar/'.md5($user->mail).'?s='.$size;
+			else
+				return false;
+		} else
+			return false;
 	}
 
 	/**
@@ -144,7 +154,7 @@ class Redmine
 	public static function getIssues($projectId = null) {
 		// Если проект не передали, то используем проект по умолчанию
 		if ( $projectId === null ) $projectId = Yii::app()->params['RedmineConfig']['targetProjectId'];
-		return Redmine::runRequest('/issues.xml?project_id='.$projectId, 'GET', '');
+		return Redmine::runRequest('/issues.xml?sort=updated_on:desc&page=1&project_id='.$projectId, 'GET', '');
 	}
 
 	/**
@@ -154,7 +164,7 @@ class Redmine
 	 * @return Object
 	 */
 	public static function getIssue($IssueId) {
-		return Redmine::runRequest('/issues/'.$IssueId.'.xml?include=journals&sort=updated_on:desc&page=1', 'GET', '');
+		return Redmine::runRequest('/issues/'.$IssueId.'.xml?include=journals', 'GET', '');
 	}
 
 	/**

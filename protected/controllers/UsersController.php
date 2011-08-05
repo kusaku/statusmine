@@ -1,63 +1,57 @@
 <?php
+/*
+* This file is part of StatusMine.
+*
+* StatusMine is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* StatusMine is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with MailTeleport. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 class UsersController extends Controller
 {
-
-	/*
-		Действие по умолчанию - выводим полный список всех людей
-	*/
+	/**
+	 * In my Redmine custom_field id-3 contains information about the birthday person.
+	 * It will be used to calculate the days before the birthday this year.
+	 *
+	 * Example:
+	 *	<custom_fields type="array">
+	 *		<custom_field name="BirthDay" id="3">
+	 *			<value>1985-03-12</value>
+	 *		</custom_field>
+	 *	</custom_fields>
+	 *
+	 */
 	public function actionIndex()
 	{
-		$peoples = Users::getAll();
-		$this->render('index',array('users'=>$peoples));
-	}
-	
-	/*
-		Действие при заданном параметре.
-		Возвращаем форму с данными человека.
-	*/
-	public function actionView()
-	{
-		$id = Yii::app()->request->getParam('id');
-		$parent = Yii::app()->request->getParam('parent');
+		$peoplesArray = array();
 
-		if ( !$parent ) $parent = 0; // Может вообще ничего не придти, т.ч. присвоим 0
+		$peoples = Redmine::getUsers();
+		foreach ($peoples as $people) {
 
-		if ( $id ) // Если передан нулевой ID, создаём нового человека (создавать нового человека всегда прикольно ;-) )
-			$people = People::getById( $id );
-			else
-			{
-				$people = new People();
-				$people->parent_id = $parent;
+			foreach ($people->custom_fields->custom_field as $field) {
+				if ($field['id'] == 3 )
+					$birthDay = $field->value.' ';
 			}
 
-		$this->renderPartial('view',array('people'=>$people));
-	}
-	
-	/*
-		Сохраняем данные, которые вернулись из формы.
-	*/
-	public function actionSave($data = null)
-	{
-		if ( !$data ) $data = $_POST; // Если нам не передали параметр $DATA, берём данные из $_POST
-		if ( isset ($data['id']) )
-		{
-			if ( $data['id'] ) $people = People::GetById($data['id']);
-			else $people = new People();
-			$people->fio = $data['fio'];
-			$people->parent_id = $data['parent_id']; // ID клиента. Если задано, это это контактное лицо клиента.
-			$people->mail = $data['mail'];
-			$people->pgroup_id = 7; // Просто клиент
-			$people->state = $data['state'];
-			$people->phone = $data['phone'];
-			$people->firm = $data['firm'];
-			$people->descr = $data['descr'];
-			$people->save();
-			// Возвращаемся к редактируемому (добавляемому) элементу
-			//$this->redirect(Yii::app()->homeUrl.'people/'.$people->id);
-			$this->redirect(Yii::app()->homeUrl);
+			$peoplesArray[] = array(
+				'id'=>$people->id,
+				'login'=> $people->login,
+				'birthDay' => $birthDay,
+				'firstname'=>$people->firstname,
+				'lastname'=>$people->lastname
+			);
 		}
-		else throw new CHttpException('_00','Не указан идентификатор (ID) человека!');
-	}
 
+		$this->render('index',array('users'=>$peoplesArray));
+	}
 
 }
