@@ -2656,3 +2656,56 @@ Stack trace:
 #1 Z:\home\hotel.loc\framework\base\CApplication.php(158): CWebApplication->processRequest()
 #2 Z:\home\hotel.loc\www\index.php(14): CApplication->run()
 #3 {main} REQUEST_URI=/favicon.ico
+2011/08/18 22:55:42 [error] [php] Invalid argument supplied for foreach() (C:\Aks\webRoot\projects\statusmine\protected\views\p\index.php:23)
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(866): PController->renderFile()
+#1 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(779): PController->renderPartial()
+#2 C:\Aks\webRoot\projects\statusmine\protected\controllers\PController.php(34): PController->render()
+#3 C:\Aks\webRoot\projects\statusmine\framework\web\actions\CInlineAction.php(50): PController->actionIndex()
+#4 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(300): CInlineAction->runWithParams()
+#5 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(278): PController->runAction()
+#6 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(257): PController->runActionWithFilters()
+#7 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(277): PController->run()
+#8 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController()
+#9 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#10 C:\Aks\webRoot\projects\statusmine\public\index.php(14): CWebApplication->run()
+REQUEST_URI=/p
+in C:\Aks\webRoot\projects\statusmine\protected\views\p\index.php (23)
+in C:\Aks\webRoot\projects\statusmine\protected\controllers\PController.php (34)
+in C:\Aks\webRoot\projects\statusmine\public\index.php (14)
+2011/08/18 22:55:42 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "favicon.ico".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('favicon.ico')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(14): CApplication->run()
+#3 {main} REQUEST_URI=/favicon.ico
+2011/08/18 22:55:45 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "favicon.ico".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('favicon.ico')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(14): CApplication->run()
+#3 {main} REQUEST_URI=/favicon.ico
+2011/08/18 22:56:26 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "templates/t1.html".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('templates/t1.ht...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(14): CApplication->run()
+#3 {main} REQUEST_URI=/templates/t1.html
+2011/08/18 22:56:34 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "templates/t1.html".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('templates/t1.ht...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(14): CApplication->run()
+#3 {main} REQUEST_URI=/templates/t1.html
+2011/08/18 22:56:38 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "templates/t1.html".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('templates/t1.ht...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(14): CApplication->run()
+#3 {main} REQUEST_URI=/templates/t1.html
+2011/08/18 22:59:35 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "templates/templates/t1.html".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('templates/templ...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(14): CApplication->run()
+#3 {main} REQUEST_URI=/templates/templates/t1.html
