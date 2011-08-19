@@ -185,6 +185,7 @@
 			
 			.progress .bar {
 			    min-width: 1em;
+			     background-image: -moz-linear-gradient(center left,rgb(255,0,0) 0%,rgb(0,0,255) 50%,rgb(0,255,0) 100%);
 			}
 			
 			.progress .bar span {
@@ -232,6 +233,7 @@
 			    margin: -.5em;
 			    opacity: .2;
 			}
+			
 		</style>
 		<script type="text/javascript" src="js/jquery.min.js"></script>
 		<script type="text/javascript">
@@ -266,7 +268,7 @@
 						switch (typeof data) {
 							case 'string':
 								if (data in methods) {
-									methods[data].apply(this)
+									methods[data].call(this)
 								}
 								else {
 									$.error('Method ' + data + ' does not exist');
@@ -275,7 +277,7 @@
 								
 							case 'object':
 							default:
-								methods['init'].apply(this)
+								methods['init'].call(this)
 								break;
 						}
 						
@@ -285,61 +287,113 @@
 				
 				$.fn.extend({
 					autoUpdate: function(data){
-						var defaults = {
-							updateUrl: null,
-							manual: false,
-							statusHash: '',
-							updateInterval: 1000
+						var options = {
+							manual: true,
+							interval: 1000,
+							success: function(elem){
+								//console.log('success');
+							},
+							error: function(elem){
+								//console.log('error');
+							},
 						};
-						
-						var options = $.extend(defaults, data);
 						
 						var methods = {
 							init: function(){
-								this.each(function(){
-									if ($(this).data('autoUpdate')) {
-										var settings = $.extend($(this).data('autoUpdate'), options);
-										$(this).data('autoUpdate', settings);
-										return 
-									} else {
-										var settings = $.extend({}, options);
-									}
+								////console.log('init');
+								if (this.data('autoUpdate')) {
+									var settings = $.extend(this.data('autoUpdate'), data);
+								}
+								else {
+									var settings = $.extend({}, options, data);
+								}
+								
+								this.data('autoUpdate', settings);
+								
+								settings.manual || methods['start'].call(this);
+							},
+							
+							start: function(){
+								////console.log('start');
+								var settings = this.data('autoUpdate'), elem = this;
+								if (!settings || settings.manual) 
+									return;
+								
+								window.k = new Array();
+								window.s = new Array();
+								window.s.push(settings);
+								
+								clearTimeout(settings._tid);
+								
+								(function(){
+									////console.log('lambda');
+									var lambda = arguments.callee;
 									
-									var elem = $(this), updaterFunc = function(){
-										$(elem).autoUpdate('update');										
-										settings.tid = setTimeout(updaterFunc, settings.updateInterval);
-									};
-																		
-									settings.tid = setTimeout(updaterFunc, settings.updateInterval);
+									window.k.push(lambda);
 									
-									$(this).data('autoUpdate', settings);
-								});
+									////console.log('lambda: new dfd');
+									settings._dfd = new jQuery.Deferred();
+									
+									jQuery.when(settings._dfd).always(function(name){
+										settings._tid = setTimeout(lambda, settings.interval);
+									});
+									
+									methods['update'].call(elem);
+									
+								})();
+							},
+							
+							stop: function(){
+								var settings = this.data('autoUpdate');
+								if (!settings) 
+									return;
+								
+								settings._dfd && settings._dfd.reject()
+								
+								clearTimeout(settings._tid);
 							},
 							
 							update: function(){
-								this.each(function(){
-									var settings = $(this).data('autoUpdate');
-									if (!settings) 
-										return;
-									console.log($(this).get(0).tagName + ' updated!');
-								});
+							
+								////console.log('update');
+								var settings = this.data('autoUpdate'), elem = this;
+								if (!settings) 
+									return;
+								
+								
+								//console.log('update ' + elem.get(0).tagName + elem.index());
+								clearTimeout(settings._tid);
+								
+								if (!settings._dfd || settings._dfd.isResolved() || settings._dfd.isRejected()) {
+									////console.log('update: new dfd');
+									settings._dfd = new jQuery.Deferred()
+								}
+								
+								jQuery.when(settings._dfd).then(settings.success, settings.error);
+								
+								////console.log('starting AJAX in ' + $(elem).get(0).tagName);
+								
+								// это эмуляция AJAX'а
+								setTimeout(function(){
+									////console.log('ajax ' + elem.get(0).tagName + elem.index());
+									//settings._dfd.resolve($(elem).get(0).tagName);									
+									Math.random() > .5 ? settings._dfd.resolve(elem) : settings._dfd.reject(elem);
+									////console.log('AJAX resolved in ' + $(elem).get(0).tagName);
+								}, Math.round(Math.random() * 1000));
 							},
 							
 							destroy: function(){
-								this.each(function(){
-									var settings = $(this).data('autoUpdate');
-									if (!settings) 
-										return;
-									clearTimeout(settings.tid);
-									$(this).removeData('autoUpdate');
-								});
+								methods['update'].call(this);
+								this.removeData('autoUpdate');
 							},
 						};
 						
 						switch (typeof data) {
 							case 'string':
 								if (data in methods) {
-									methods[data].apply(this)
+									this.each(function(){
+										methods[data].call($(this));
+									});
 								}
 								else {
 									$.error('Method ' + data + ' does not exist');
@@ -348,10 +402,11 @@
 								
 							case 'object':
 							default:
-								methods['init'].apply(this)
+								this.each(function(){
+									methods['init'].call($(this))
+								});
 								break;
 						}
-						
 						return this;
 					}
 				});
@@ -374,7 +429,6 @@
 					$('.fullh').inflate({
 						width: 0
 					});
-					
 				}).trigger('resize');
 				
 				$('.progress.test').bind('test', function(){
@@ -382,12 +436,33 @@
 					percent >= 0 && (class = 'red');
 					percent > 33 && (class = 'blue');
 					percent > 66 && (class = 'green');
-					$(this).find('.bar').css('width', percent + '%').removeClass('red green blue').addClass(class).find('span').text(percent + '%');
+					$(this).find('.bar').css({
+						width: percent + '%',
+						background: 'rgb(' + Math.round(255 - 255 / 100 * percent) + ',' + Math.round(255 / 100 * percent) + ',0)'
+					}).removeClass('red green blue').addClass(class).find('span').text(percent + '%');
+					$(this).find('.full').inflate();
 					$(this).data('test', ++percent);
-					//$(window).trigger('resize');
 					setTimeout("$('.progress.test').trigger('test');", 100);
 				}).trigger('test');
+				
+				$('.gravatar .outerglow').autoUpdate({
+					manual: false,
+					interval: 2000,
+					success: function(elem){
+						//console.log('success ' + elem.get(0).tagName + elem.index());
+						elem.animate({
+							opacity: 1
+						}, 500);
+					},
+					error: function(elem){
+						//console.log('error' + elem.get(0).tagName + elem.index());
+						elem.animate({
+							opacity: 0
+						}, 500);
+					},
+				});
 			});
+			
 			
 			
 		</script>
