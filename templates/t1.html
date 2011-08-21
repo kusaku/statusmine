@@ -147,7 +147,7 @@
 			
 			.name {
 			    margin: 0 0 0 .5em;
-			    ooverflow: hidden;
+			    overflow: hidden;
 			}
 			
 			.name .inset {
@@ -163,6 +163,7 @@
 			    text-align: right;
 			    text-shadow: 0 0 .5em #000000;
 			    text-transform: uppercase;
+			    white-space: nowrap;
 			}
 			
 			.progress {
@@ -185,6 +186,8 @@
 			
 			.progress .bar {
 			    min-width: 1em;
+			    text-align: right;
+			    /*background-image: -moz-linear-gradient(center left,rgb(255,0,0) 0%,rgb(0,0,255) 50%,rgb(0,255,0) 100%);*/
 			}
 			
 			.progress .bar span {
@@ -193,7 +196,6 @@
 			    line-height: 200%;
 			    font-size: 75%;
 			    font-weight: bold;
-			    text-align: right;
 			    text-shadow: 0 0 .5em #000000;
 			}
 			
@@ -232,6 +234,12 @@
 			    margin: -.5em;
 			    opacity: .2;
 			}
+			
+			
+			
+			
+			
+			
 		</style>
 		<script type="text/javascript" src="js/jquery.min.js"></script>
 		<script type="text/javascript">
@@ -266,7 +274,7 @@
 						switch (typeof data) {
 							case 'string':
 								if (data in methods) {
-									methods[data].apply(this)
+									methods[data].call(this)
 								}
 								else {
 									$.error('Method ' + data + ' does not exist');
@@ -275,7 +283,7 @@
 								
 							case 'object':
 							default:
-								methods['init'].apply(this)
+								methods['init'].call(this)
 								break;
 						}
 						
@@ -285,61 +293,101 @@
 				
 				$.fn.extend({
 					autoUpdate: function(data){
-						var defaults = {
-							updateUrl: null,
-							manual: false,
-							statusHash: '',
-							updateInterval: 1000
+						var options = {
+							manual: true,
+							interval: 1000,
+							action: function(dfd){
+								//console.log(dfd);
+								Math.random() > .5 ? dfd.resolveWith(this) : dfd.rejectWith(this);
+							},
+							success: function(){
+								//console.log('success');
+							},
+							error: function(){
+								//console.log('error');
+							},
 						};
-						
-						var options = $.extend(defaults, data);
 						
 						var methods = {
 							init: function(){
-								this.each(function(){
-									if ($(this).data('autoUpdate')) {
-										var settings = $.extend($(this).data('autoUpdate'), options);
-										$(this).data('autoUpdate', settings);
-										return 
-									} else {
-										var settings = $.extend({}, options);
-									}
+								////console.log('init');
+								if (this.data('autoUpdate')) {
+									var settings = $.extend(this.data('autoUpdate'), data);
+								}
+								else {
+									var settings = $.extend({}, options, data);
+								}
+								
+								this.data('autoUpdate', settings);
+								
+								settings.manual || methods['start'].call(this);
+							},
+							
+							start: function(){
+								////console.log('start');
+								var settings = this.data('autoUpdate'), elem = this;
+								if (!settings || settings.manual) 
+									return;
+								
+								clearTimeout(settings._tid);
+								
+								(function(){
+									////console.log('lambda');
+									var lambda = arguments.callee;
+									////console.log('lambda: new dfd');
+									settings._dfd = new jQuery.Deferred();
 									
-									var elem = $(this), updaterFunc = function(){
-										$(elem).autoUpdate('update');										
-										settings.tid = setTimeout(updaterFunc, settings.updateInterval);
-									};
-																		
-									settings.tid = setTimeout(updaterFunc, settings.updateInterval);
+									jQuery.when(settings._dfd).always(function(name){
+										settings._tid = setTimeout(lambda, settings.interval);
+									});
 									
-									$(this).data('autoUpdate', settings);
-								});
+									methods['update'].call(elem);
+									
+								})();
+							},
+							
+							stop: function(){
+								var settings = this.data('autoUpdate');
+								if (!settings) 
+									return;
+								
+								settings._dfd && settings._dfd.rejectWith(this);
+								
+								clearTimeout(settings._tid);
 							},
 							
 							update: function(){
-								this.each(function(){
-									var settings = $(this).data('autoUpdate');
-									if (!settings) 
-										return;
-									console.log($(this).get(0).tagName + ' updated!');
-								});
+							
+								////console.log('update');
+								var settings = this.data('autoUpdate'), elem = this;
+								if (!settings) 
+									return;
+								
+								//console.log('update ' + elem.get(0).tagName + elem.index());
+								clearTimeout(settings._tid);
+								
+								if (!settings._dfd || settings._dfd.isResolved() || settings._dfd.isRejected()) {
+									////console.log('update: new dfd');
+									settings._dfd = new jQuery.Deferred()
+								}
+								
+								jQuery.when(settings._dfd).then(settings.success, settings.error);
+								
+								settings.action.call(elem, settings._dfd);
 							},
 							
 							destroy: function(){
-								this.each(function(){
-									var settings = $(this).data('autoUpdate');
-									if (!settings) 
-										return;
-									clearTimeout(settings.tid);
-									$(this).removeData('autoUpdate');
-								});
+								methods['update'].call(this);
+								this.removeData('autoUpdate');
 							},
 						};
 						
 						switch (typeof data) {
 							case 'string':
 								if (data in methods) {
-									methods[data].apply(this)
+									this.each(function(){
+										methods[data].call($(this));
+									});
 								}
 								else {
 									$.error('Method ' + data + ' does not exist');
@@ -348,10 +396,11 @@
 								
 							case 'object':
 							default:
-								methods['init'].apply(this)
+								this.each(function(){
+									methods['init'].call($(this))
+								});
 								break;
 						}
-						
 						return this;
 					}
 				});
@@ -374,20 +423,60 @@
 					$('.fullh').inflate({
 						width: 0
 					});
-					
 				}).trigger('resize');
 				
-				$('.progress.test').bind('test', function(){
-					percent = $(this).data('test') ? $(this).data('test') % 100 : 0;
-					percent >= 0 && (class = 'red');
-					percent > 33 && (class = 'blue');
-					percent > 66 && (class = 'green');
-					$(this).find('.bar').css('width', percent + '%').removeClass('red green blue').addClass(class).find('span').text(percent + '%');
-					$(this).data('test', ++percent);
-					//$(window).trigger('resize');
-					setTimeout("$('.progress.test').trigger('test');", 100);
-				}).trigger('test');
+			
+				$('.progress').autoUpdate({
+					manual: false,
+					interval: 1000,
+					action: function(dfd){
+						percent = this.data('test') ? this.data('test') % 100 : Math.round(Math.random()*100);
+						this.find('.bar').css({
+							width: percent + '%',
+							background: 'rgb(' + Math.round(255 - 255 / 100 * percent) + ',' + Math.round(255 / 100 * percent) + ',0)'
+						}).find('span').text(percent + '%');
+						this.find('.full').inflate();
+						this.data('test', ++percent);
+						dfd.resolveWith(this);
+					},
+				});
+				
+				// пример использования
+				$('.gravatar').autoUpdate({
+					manual: false,
+					interval: 2000,
+					action: function(dfd){
+						var a = ['dbb17b1a40d86df9e28c38023a2df6bc', 'a4d3940791c98c27816e5f57455a5fbe', '9d868bd51327f1f89aa1325da5bd4e13'];
+						var b = a[Math.floor(Math.random() * 3)];
+						this.find('img').attr('src', 'https://secure.gravatar.com/avatar/' + b);
+						dfd.resolveWith(this);
+					},
+					success: function(){
+						//console.log('success ' + elem.get(0).tagName + elem.index());
+						this.animate({
+							opacity: 0
+						}, 500).animate({
+							opacity: 1
+						}, 500);
+					}
+				});
+				
+				$('.calendar').autoUpdate({
+					manual: false,
+					interval: 500,
+					action: function(dfd){
+						var dots = this.data('dots') ? false : true;
+						this.data('dots', dots);
+						var dow = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
+						var moy = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
+						var d = new Date();
+						this.find('.time').text(d.getHours() + (dots ? ':' : ' ') + d.getMinutes());
+						this.find('.date').text(dow[d.getDay()] + ', ' + d.getDate() + ' ' + moy[d.getMonth()] + ' ' + d.getYear());
+						dfd.resolveWith(this);
+					}
+				});
 			});
+			
 			
 			
 		</script>
@@ -395,10 +484,227 @@
 	<body link="t1.html">
 		<div class="outer full">
 			<div class="left fullh">
+                <div class="project">
+                    <div class="name" style="display:inline-block;width:20%">
+                        <div class="inset full" style="width:100%;"></div>
+                        <span>site.ru site.ru site.ru site.ru site.ru</span>
+                    </div>
+                    <div class="progress test" style="display:inline-block;width:50%">
+                        <div class="inset full" style="width:101%;"></div>
+                        <div class="bar round green" style="width:33%">
+                            <span>33%</span>
+                            <div class="outset round full"></div>
+                        </div>
+                    </div>
+                    <div class="users" style="display:inline-block;width:20%">
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                    </div>
+                </div>				
+                <div class="project">
+                    <div class="name" style="display:inline-block;width:20%">
+                        <div class="inset full" style="width:100%;"></div>
+                        <span>site.ru site.ru site.ru site.ru site.ru</span>
+                    </div>
+                    <div class="progress test" style="display:inline-block;width:50%">
+                        <div class="inset full" style="width:101%;"></div>
+                        <div class="bar round green" style="width:33%">
+                            <span>33%</span>
+                            <div class="outset round full"></div>
+                        </div>
+                    </div>
+                    <div class="users" style="display:inline-block;width:20%">
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                    </div>
+                </div>				
+                <div class="project">
+                    <div class="name" style="display:inline-block;width:20%">
+                        <div class="inset full" style="width:100%;"></div>
+                        <span>site.ru site.ru site.ru site.ru site.ru</span>
+                    </div>
+                    <div class="progress test" style="display:inline-block;width:50%">
+                        <div class="inset full" style="width:101%;"></div>
+                        <div class="bar round green" style="width:33%">
+                            <span>33%</span>
+                            <div class="outset round full"></div>
+                        </div>
+                    </div>
+                    <div class="users" style="display:inline-block;width:20%">
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                    </div>
+                </div>				
+                <div class="project">
+                    <div class="name" style="display:inline-block;width:20%">
+                        <div class="inset full" style="width:100%;"></div>
+                        <span>site.ru site.ru site.ru site.ru site.ru</span>
+                    </div>
+                    <div class="progress test" style="display:inline-block;width:50%">
+                        <div class="inset full" style="width:101%;"></div>
+                        <div class="bar round green" style="width:33%">
+                            <span>33%</span>
+                            <div class="outset round full"></div>
+                        </div>
+                    </div>
+                    <div class="users" style="display:inline-block;width:20%">
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                    </div>
+                </div>				
+                <div class="project">
+                    <div class="name" style="display:inline-block;width:20%">
+                        <div class="inset full" style="width:100%;"></div>
+                        <span>site.ru site.ru site.ru site.ru site.ru</span>
+                    </div>
+                    <div class="progress test" style="display:inline-block;width:50%">
+                        <div class="inset full" style="width:101%;"></div>
+                        <div class="bar round green" style="width:33%">
+                            <span>33%</span>
+                            <div class="outset round full"></div>
+                        </div>
+                    </div>
+                    <div class="users" style="display:inline-block;width:20%">
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                    </div>
+                </div>				
+                <div class="project">
+                    <div class="name" style="display:inline-block;width:20%">
+                        <div class="inset full" style="width:100%;"></div>
+                        <span>site.ru site.ru site.ru site.ru site.ru</span>
+                    </div>
+                    <div class="progress test" style="display:inline-block;width:50%">
+                        <div class="inset full" style="width:101%;"></div>
+                        <div class="bar round green" style="width:33%">
+                            <span>33%</span>
+                            <div class="outset round full"></div>
+                        </div>
+                    </div>
+                    <div class="users" style="display:inline-block;width:20%">
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                    </div>
+                </div>				
+                <div class="project">
+                    <div class="name" style="display:inline-block;width:20%">
+                        <div class="inset full" style="width:100%;"></div>
+                        <span>site.ru site.ru site.ru site.ru site.ru</span>
+                    </div>
+                    <div class="progress test" style="display:inline-block;width:50%">
+                        <div class="inset full" style="width:101%;"></div>
+                        <div class="bar round green" style="width:33%">
+                            <span>33%</span>
+                            <div class="outset round full"></div>
+                        </div>
+                    </div>
+                    <div class="users" style="display:inline-block;width:20%">
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                    </div>
+                </div>				
 				<div class="project">
 					<div class="name" style="display:inline-block;width:20%">
 						<div class="inset full" style="width:100%;"></div>
-						<span>site.ru</span>
+						<span>site.ru site.ru site.ru site.ru site.ru</span>
 					</div>
 					<div class="progress test" style="display:inline-block;width:50%">
 						<div class="inset full" style="width:101%;"></div>
@@ -488,6 +794,316 @@
 						</div>
 					</div>
 				</div>
+<div class="project">
+                    <div class="name" style="display:inline-block;width:20%">
+                        <div class="inset full" style="width:100%;"></div>
+                        <span>site.ru site.ru site.ru site.ru site.ru</span>
+                    </div>
+                    <div class="progress test" style="display:inline-block;width:50%">
+                        <div class="inset full" style="width:101%;"></div>
+                        <div class="bar round green" style="width:33%">
+                            <span>33%</span>
+                            <div class="outset round full"></div>
+                        </div>
+                    </div>
+                    <div class="users" style="display:inline-block;width:20%">
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                    </div>
+                </div>              
+                <div class="project">
+                    <div class="name" style="display:inline-block;width:20%">
+                        <div class="inset full" style="width:100%;"></div>
+                        <span>site.ru site.ru site.ru site.ru site.ru</span>
+                    </div>
+                    <div class="progress test" style="display:inline-block;width:50%">
+                        <div class="inset full" style="width:101%;"></div>
+                        <div class="bar round green" style="width:33%">
+                            <span>33%</span>
+                            <div class="outset round full"></div>
+                        </div>
+                    </div>
+                    <div class="users" style="display:inline-block;width:20%">
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                    </div>
+                </div>              
+                <div class="project">
+                    <div class="name" style="display:inline-block;width:20%">
+                        <div class="inset full" style="width:100%;"></div>
+                        <span>site.ru site.ru site.ru site.ru site.ru</span>
+                    </div>
+                    <div class="progress test" style="display:inline-block;width:50%">
+                        <div class="inset full" style="width:101%;"></div>
+                        <div class="bar round green" style="width:33%">
+                            <span>33%</span>
+                            <div class="outset round full"></div>
+                        </div>
+                    </div>
+                    <div class="users" style="display:inline-block;width:20%">
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                    </div>
+                </div>              
+                <div class="project">
+                    <div class="name" style="display:inline-block;width:20%">
+                        <div class="inset full" style="width:100%;"></div>
+                        <span>site.ru site.ru site.ru site.ru site.ru</span>
+                    </div>
+                    <div class="progress test" style="display:inline-block;width:50%">
+                        <div class="inset full" style="width:101%;"></div>
+                        <div class="bar round green" style="width:33%">
+                            <span>33%</span>
+                            <div class="outset round full"></div>
+                        </div>
+                    </div>
+                    <div class="users" style="display:inline-block;width:20%">
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                    </div>
+                </div>              
+                <div class="project">
+                    <div class="name" style="display:inline-block;width:20%">
+                        <div class="inset full" style="width:100%;"></div>
+                        <span>site.ru site.ru site.ru site.ru site.ru</span>
+                    </div>
+                    <div class="progress test" style="display:inline-block;width:50%">
+                        <div class="inset full" style="width:101%;"></div>
+                        <div class="bar round green" style="width:33%">
+                            <span>33%</span>
+                            <div class="outset round full"></div>
+                        </div>
+                    </div>
+                    <div class="users" style="display:inline-block;width:20%">
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                    </div>
+                </div>              
+                <div class="project">
+                    <div class="name" style="display:inline-block;width:20%">
+                        <div class="inset full" style="width:100%;"></div>
+                        <span>site.ru site.ru site.ru site.ru site.ru</span>
+                    </div>
+                    <div class="progress test" style="display:inline-block;width:50%">
+                        <div class="inset full" style="width:101%;"></div>
+                        <div class="bar round green" style="width:33%">
+                            <span>33%</span>
+                            <div class="outset round full"></div>
+                        </div>
+                    </div>
+                    <div class="users" style="display:inline-block;width:20%">
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                    </div>
+                </div>              
+                <div class="project">
+                    <div class="name" style="display:inline-block;width:20%">
+                        <div class="inset full" style="width:100%;"></div>
+                        <span>site.ru site.ru site.ru site.ru site.ru</span>
+                    </div>
+                    <div class="progress test" style="display:inline-block;width:50%">
+                        <div class="inset full" style="width:101%;"></div>
+                        <div class="bar round green" style="width:33%">
+                            <span>33%</span>
+                            <div class="outset round full"></div>
+                        </div>
+                    </div>
+                    <div class="users" style="display:inline-block;width:20%">
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                    </div>
+                </div>              
+                <div class="project">
+                    <div class="name" style="display:inline-block;width:20%">
+                        <div class="inset full" style="width:100%;"></div>
+                        <span>site.ru site.ru site.ru site.ru site.ru</span>
+                    </div>
+                    <div class="progress test" style="display:inline-block;width:50%">
+                        <div class="inset full" style="width:101%;"></div>
+                        <div class="bar round green" style="width:33%">
+                            <span>33%</span>
+                            <div class="outset round full"></div>
+                        </div>
+                    </div>
+                    <div class="users" style="display:inline-block;width:20%">
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="project">
+                    <div class="name" style="display:inline-block;width:20%">
+                        <div class="inset full" style="width:100%;"></div>
+                        <span>site.ru</span>
+                    </div>
+                    <div class="progress" style="display:inline-block;width:50%">
+                        <div class="inset full" style="width:100%;"></div>
+                        <div class="bar round green" style="width:33%">
+                            <span>33%</span>
+                            <div class="outset round full"></div>
+                        </div>
+                    </div>
+                    <div class="users" style="display:inline-block;width:20%">
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                        <div class="gravatar">
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                            <div class="outerglow full"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="project">
+                    <div class="name" style="display:inline-block;width:20%">
+                        <div class="inset full" style="width:100%;"></div>
+                        <span>site.ru</span>
+                    </div>
+                    <div class="progress" style="display:inline-block;width:50%">
+                        <div class="inset full" style="width:100%;"></div>
+                        <div class="bar round green" style="width:33%">
+                            <span>33%</span>
+                            <div class="outset round full"></div>
+                        </div>
+                    </div>
+                    <div class="users" style="display:inline-block;width:20%">
+                        <div class="gravatar">
+                            <div class="outerglow full"></div>
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                        </div>
+                        <div class="gravatar">
+                            <div class="outerglow full"></div>
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                        </div>
+                        <div class="gravatar">
+                            <div class="outerglow full"></div>
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                        </div>
+                        <div class="gravatar">
+                            <div class="outerglow full"></div>
+                            <img src="https://secure.gravatar.com/avatar/dbb17b1a40d86df9e28c38023a2df6bc"/>
+                        </div>
+                    </div>
+                </div>				
 			</div>
 			<div class="right fullh">
 				<div class="layout fullh">
