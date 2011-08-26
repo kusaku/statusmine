@@ -9931,3 +9931,699 @@ Stack trace:
 #1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
 #2 C:\Aks\webRoot\projects\statusmine\public\index.php(14): CApplication->run()
 #3 {main} REQUEST_URI=/favicon.ico
+2011/08/25 21:48:52 [error] [php] Invalid argument supplied for foreach() (C:\Aks\webRoot\projects\statusmine\protected\views\p\index.php:23)
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(866): PController->renderFile()
+#1 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(779): PController->renderPartial()
+#2 C:\Aks\webRoot\projects\statusmine\protected\controllers\PController.php(34): PController->render()
+#3 C:\Aks\webRoot\projects\statusmine\framework\web\actions\CInlineAction.php(50): PController->actionIndex()
+#4 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(300): CInlineAction->runWithParams()
+#5 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(278): PController->runAction()
+#6 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(257): PController->runActionWithFilters()
+#7 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(277): PController->run()
+#8 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController()
+#9 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#10 C:\Aks\webRoot\projects\statusmine\public\index.php(14): CWebApplication->run()
+REQUEST_URI=/p
+in C:\Aks\webRoot\projects\statusmine\protected\views\p\index.php (23)
+in C:\Aks\webRoot\projects\statusmine\protected\controllers\PController.php (34)
+in C:\Aks\webRoot\projects\statusmine\public\index.php (14)
+2011/08/25 21:48:52 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "favicon.ico".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('favicon.ico')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(14): CApplication->run()
+#3 {main} REQUEST_URI=/favicon.ico
+2011/08/25 21:48:55 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "favicon.ico".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('favicon.ico')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(14): CApplication->run()
+#3 {main} REQUEST_URI=/favicon.ico
+2011/08/25 22:01:13 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "templates/itheme/styles.css".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('templates/ithem...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(14): CApplication->run()
+#3 {main} REQUEST_URI=/templates/itheme/styles.css
+2011/08/25 22:01:15 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "templates/itheme/styles.css".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('templates/ithem...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(14): CApplication->run()
+#3 {main} REQUEST_URI=/templates/itheme/styles.css
+2011/08/25 22:01:32 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "templates/theme/img/outset_round.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('templates/theme...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(14): CApplication->run()
+#3 {main} REQUEST_URI=/templates/theme/img/outset_round.png
+2011/08/25 22:01:32 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "templates/theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('templates/theme...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(14): CApplication->run()
+#3 {main} REQUEST_URI=/templates/theme/img/outer_glow.png.png
+2011/08/25 22:01:32 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "templates/theme/img/inset_round.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('templates/theme...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(14): CApplication->run()
+#3 {main} REQUEST_URI=/templates/theme/img/inset_round.png
+2011/08/25 22:01:32 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "templates/theme/img/inner_shadow.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('templates/theme...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(14): CApplication->run()
+#3 {main} REQUEST_URI=/templates/theme/img/inner_shadow.png
+2011/08/25 22:01:32 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "templates/theme/img/outer_glow_round.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('templates/theme...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(14): CApplication->run()
+#3 {main} REQUEST_URI=/templates/theme/img/outer_glow_round.png
+2011/08/25 22:01:43 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "templates/theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('templates/theme...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(14): CApplication->run()
+#3 {main} REQUEST_URI=/templates/theme/img/outer_glow.png.png
+2011/08/25 22:02:15 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "templates/theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('templates/theme...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(14): CApplication->run()
+#3 {main} REQUEST_URI=/templates/theme/img/outer_glow.png.png
+2011/08/27 01:18:53 [error] [php] Invalid argument supplied for foreach() (C:\Aks\webRoot\projects\statusmine\protected\views\p\index.php:23)
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(866): PController->renderFile()
+#1 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(779): PController->renderPartial()
+#2 C:\Aks\webRoot\projects\statusmine\protected\controllers\PController.php(34): PController->render()
+#3 C:\Aks\webRoot\projects\statusmine\framework\web\actions\CInlineAction.php(50): PController->actionIndex()
+#4 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(300): CInlineAction->runWithParams()
+#5 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(278): PController->runAction()
+#6 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(257): PController->runActionWithFilters()
+#7 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(277): PController->run()
+#8 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController()
+#9 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#10 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CWebApplication->run()
+REQUEST_URI=/p
+in C:\Aks\webRoot\projects\statusmine\protected\views\p\index.php (23)
+in C:\Aks\webRoot\projects\statusmine\protected\controllers\PController.php (34)
+in C:\Aks\webRoot\projects\statusmine\public\index.php (13)
+2011/08/27 01:19:49 [error] [php] Invalid argument supplied for foreach() (C:\Aks\webRoot\projects\statusmine\protected\views\p\index.php:23)
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(866): PController->renderFile()
+#1 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(779): PController->renderPartial()
+#2 C:\Aks\webRoot\projects\statusmine\protected\controllers\PController.php(34): PController->render()
+#3 C:\Aks\webRoot\projects\statusmine\framework\web\actions\CInlineAction.php(50): PController->actionIndex()
+#4 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(300): CInlineAction->runWithParams()
+#5 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(278): PController->runAction()
+#6 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(257): PController->runActionWithFilters()
+#7 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(277): PController->run()
+#8 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController()
+#9 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#10 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CWebApplication->run()
+REQUEST_URI=/p
+in C:\Aks\webRoot\projects\statusmine\protected\views\p\index.php (23)
+in C:\Aks\webRoot\projects\statusmine\protected\controllers\PController.php (34)
+in C:\Aks\webRoot\projects\statusmine\public\index.php (13)
+2011/08/27 01:19:52 [error] [php] include(ElementController.php) [<a href='/phpman/function.include.html'>function.include.html</a>]: failed to open stream: No such file or directory (C:\Aks\webRoot\projects\statusmine\framework\YiiBase.php:421)
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\protected\controllers\ProjectController.php(5): spl_autoload_call()
+#1 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(345): require()
+#2 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(271): CWebApplication->createController()
+#3 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController()
+#4 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#5 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CWebApplication->run()
+REQUEST_URI=/project
+in C:\Aks\webRoot\projects\statusmine\protected\controllers\ProjectController.php (5)
+in C:\Aks\webRoot\projects\statusmine\public\index.php (13)
+2011/08/27 01:22:48 [error] [exception.CException] exception 'CException' with message 'Property "SiteController.breadcrumbs" is not defined.' in C:\Aks\webRoot\projects\statusmine\framework\base\CComponent.php:174
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\protected\views\site\login.php(3): CComponent->__set('breadcrumbs', Array)
+#1 C:\Aks\webRoot\projects\statusmine\framework\web\CBaseController.php(119): require('C:\Aks\webRoot\...')
+#2 C:\Aks\webRoot\projects\statusmine\framework\web\CBaseController.php(88): CBaseController->renderInternal('C:\Aks\webRoot\...', Array, true)
+#3 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(866): CBaseController->renderFile('C:\Aks\webRoot\...', Array, true)
+#4 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(779): CController->renderPartial('login', Array, true)
+#5 C:\Aks\webRoot\projects\statusmine\protected\controllers\SiteController.php(106): CController->render('login', Array)
+#6 C:\Aks\webRoot\projects\statusmine\framework\web\actions\CInlineAction.php(50): SiteController->actionLogin()
+#7 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(300): CInlineAction->runWithParams(Array)
+#8 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(278): CController->runAction(Object(CInlineAction))
+#9 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(257): CController->runActionWithFilters(Object(CInlineAction), Array)
+#10 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(277): CController->run('login')
+#11 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('site/login')
+#12 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#13 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#14 {main} REQUEST_URI=/site/login
+2011/08/27 01:23:47 [error] [exception.CException] exception 'CException' with message 'Property "SiteController.breadcrumbs" is not defined.' in C:\Aks\webRoot\projects\statusmine\framework\base\CComponent.php:174
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\protected\views\site\login.php(3): CComponent->__set('breadcrumbs', Array)
+#1 C:\Aks\webRoot\projects\statusmine\framework\web\CBaseController.php(119): require('C:\Aks\webRoot\...')
+#2 C:\Aks\webRoot\projects\statusmine\framework\web\CBaseController.php(88): CBaseController->renderInternal('C:\Aks\webRoot\...', Array, true)
+#3 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(866): CBaseController->renderFile('C:\Aks\webRoot\...', Array, true)
+#4 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(779): CController->renderPartial('login', Array, true)
+#5 C:\Aks\webRoot\projects\statusmine\protected\controllers\SiteController.php(106): CController->render('login', Array)
+#6 C:\Aks\webRoot\projects\statusmine\framework\web\actions\CInlineAction.php(50): SiteController->actionLogin()
+#7 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(300): CInlineAction->runWithParams(Array)
+#8 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(278): CController->runAction(Object(CInlineAction))
+#9 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(257): CController->runActionWithFilters(Object(CInlineAction), Array)
+#10 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(277): CController->run('login')
+#11 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('site/login')
+#12 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#13 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#14 {main} REQUEST_URI=/site/login
+2011/08/27 01:23:48 [error] [exception.CException] exception 'CException' with message 'ProjectController cannot find the requested view "//elements/project".' in C:\Aks\webRoot\projects\statusmine\framework\web\CController.php:875
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(779): CController->renderPartial('//elements/proj...', Array, true)
+#1 C:\Aks\webRoot\projects\statusmine\protected\controllers\ProjectController.php(8): CController->render('//elements/proj...', Array)
+#2 C:\Aks\webRoot\projects\statusmine\framework\web\actions\CInlineAction.php(50): ProjectController->actionView()
+#3 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(300): CInlineAction->runWithParams(Array)
+#4 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#5 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#6 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(1144): CFilter->filter(Object(CFilterChain))
+#7 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#8 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#9 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(283): CFilterChain->run()
+#10 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(257): CController->runActionWithFilters(Object(CInlineAction), Array)
+#11 C:\Aks\webRoot\projects\statusmine\protected\components\ElementController.php(29): CController->run('view')
+#12 C:\Aks\webRoot\projects\statusmine\framework\web\actions\CInlineAction.php(50): ElementController->actionIndex()
+#13 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(300): CInlineAction->runWithParams(Array)
+#14 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#15 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(283): CFilterChain->run()
+#16 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(257): CController->runActionWithFilters(Object(CInlineAction), Array)
+#17 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(277): CController->run('')
+#18 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('project')
+#19 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#20 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#21 {main} REQUEST_URI=/project
+2011/08/27 01:26:54 [error] [exception.CException] exception 'CException' with message 'ProjectController cannot find the requested view "//elementss/project".' in C:\Aks\webRoot\projects\statusmine\framework\web\CController.php:875
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(779): CController->renderPartial('//elementss/pro...', Array, true)
+#1 C:\Aks\webRoot\projects\statusmine\protected\controllers\ProjectController.php(8): CController->render('//elementss/pro...', Array)
+#2 C:\Aks\webRoot\projects\statusmine\framework\web\actions\CInlineAction.php(50): ProjectController->actionView()
+#3 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(300): CInlineAction->runWithParams(Array)
+#4 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#5 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#6 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(1144): CFilter->filter(Object(CFilterChain))
+#7 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#8 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#9 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(283): CFilterChain->run()
+#10 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(257): CController->runActionWithFilters(Object(CInlineAction), Array)
+#11 C:\Aks\webRoot\projects\statusmine\protected\components\ElementController.php(29): CController->run('view')
+#12 C:\Aks\webRoot\projects\statusmine\framework\web\actions\CInlineAction.php(50): ElementController->actionIndex()
+#13 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(300): CInlineAction->runWithParams(Array)
+#14 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#15 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(283): CFilterChain->run()
+#16 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(257): CController->runActionWithFilters(Object(CInlineAction), Array)
+#17 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(277): CController->run('')
+#18 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('project')
+#19 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#20 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#21 {main} REQUEST_URI=/project
+2011/08/27 01:32:23 [error] [exception.CHttpException.400] exception 'CHttpException' with message 'Your request is not valid.' in C:\Aks\webRoot\projects\statusmine\framework\web\CController.php:1131
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CInlineFilter.php(59): CController->filterAjaxOnly(Object(CFilterChain))
+#1 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#2 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#3 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(1144): CFilter->filter(Object(CFilterChain))
+#4 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#5 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#6 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(283): CFilterChain->run()
+#7 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(257): CController->runActionWithFilters(Object(CInlineAction), Array)
+#8 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(277): CController->run('render')
+#9 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('project/render')
+#10 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#11 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#12 {main} REQUEST_URI=/project/render
+2011/08/27 01:32:40 [error] [exception.CHttpException.400] exception 'CHttpException' with message 'Your request is not valid.' in C:\Aks\webRoot\projects\statusmine\framework\web\CController.php:1131
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CInlineFilter.php(59): CController->filterAjaxOnly(Object(CFilterChain))
+#1 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#2 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#3 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(1144): CFilter->filter(Object(CFilterChain))
+#4 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#5 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#6 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(283): CFilterChain->run()
+#7 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(257): CController->runActionWithFilters(Object(CInlineAction), Array)
+#8 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(277): CController->run('status')
+#9 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('project/status')
+#10 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#11 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#12 {main} REQUEST_URI=/project/status
+2011/08/27 01:32:42 [error] [exception.CHttpException.400] exception 'CHttpException' with message 'Your request is not valid.' in C:\Aks\webRoot\projects\statusmine\framework\web\CController.php:1131
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CInlineFilter.php(59): CController->filterAjaxOnly(Object(CFilterChain))
+#1 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#2 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#3 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(1144): CFilter->filter(Object(CFilterChain))
+#4 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#5 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#6 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(283): CFilterChain->run()
+#7 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(257): CController->runActionWithFilters(Object(CInlineAction), Array)
+#8 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(277): CController->run('render')
+#9 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('project/render')
+#10 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#11 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#12 {main} REQUEST_URI=/project/render
+2011/08/27 01:34:24 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "favicon.ico".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('favicon.ico')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/favicon.ico
+2011/08/27 01:44:31 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "favicon.ico".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('favicon.ico')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/favicon.ico
+2011/08/27 01:56:28 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "project".' in C:\Aks\webRoot\projects\statusmine\framework\web\CController.php:477
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(262): CController->missingAction('project')
+#1 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(744): CController->run('project')
+#2 C:\Aks\webRoot\projects\statusmine\protected\views\site\index.php(35): CController->forward('project', false)
+#3 C:\Aks\webRoot\projects\statusmine\framework\web\CBaseController.php(119): require('C:\Aks\webRoot\...')
+#4 C:\Aks\webRoot\projects\statusmine\framework\web\CBaseController.php(88): CBaseController->renderInternal('C:\Aks\webRoot\...', NULL, true)
+#5 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(866): CBaseController->renderFile('C:\Aks\webRoot\...', NULL, true)
+#6 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(779): CController->renderPartial('index', NULL, true)
+#7 C:\Aks\webRoot\projects\statusmine\protected\controllers\SiteController.php(46): CController->render('index')
+#8 C:\Aks\webRoot\projects\statusmine\framework\web\actions\CInlineAction.php(50): SiteController->actionIndex()
+#9 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(300): CInlineAction->runWithParams(Array)
+#10 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(278): CController->runAction(Object(CInlineAction))
+#11 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(257): CController->runActionWithFilters(Object(CInlineAction), Array)
+#12 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(277): CController->run('')
+#13 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('')
+#14 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#15 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#16 {main} REQUEST_URI=/
+2011/08/27 01:56:34 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "project".' in C:\Aks\webRoot\projects\statusmine\framework\web\CController.php:477
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(262): CController->missingAction('project')
+#1 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(744): CController->run('project')
+#2 C:\Aks\webRoot\projects\statusmine\protected\views\site\index.php(35): CController->forward('project', false)
+#3 C:\Aks\webRoot\projects\statusmine\framework\web\CBaseController.php(119): require('C:\Aks\webRoot\...')
+#4 C:\Aks\webRoot\projects\statusmine\framework\web\CBaseController.php(88): CBaseController->renderInternal('C:\Aks\webRoot\...', NULL, true)
+#5 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(866): CBaseController->renderFile('C:\Aks\webRoot\...', NULL, true)
+#6 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(779): CController->renderPartial('index', NULL, true)
+#7 C:\Aks\webRoot\projects\statusmine\protected\controllers\SiteController.php(46): CController->render('index')
+#8 C:\Aks\webRoot\projects\statusmine\framework\web\actions\CInlineAction.php(50): SiteController->actionIndex()
+#9 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(300): CInlineAction->runWithParams(Array)
+#10 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(278): CController->runAction(Object(CInlineAction))
+#11 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(257): CController->runActionWithFilters(Object(CInlineAction), Array)
+#12 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(277): CController->run('')
+#13 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('')
+#14 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#15 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#16 {main} REQUEST_URI=/
+2011/08/27 01:57:14 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "project".' in C:\Aks\webRoot\projects\statusmine\framework\web\CController.php:477
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(262): CController->missingAction('project')
+#1 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(744): CController->run('project')
+#2 C:\Aks\webRoot\projects\statusmine\protected\views\site\index.php(35): CController->forward('project', false)
+#3 C:\Aks\webRoot\projects\statusmine\framework\web\CBaseController.php(119): require('C:\Aks\webRoot\...')
+#4 C:\Aks\webRoot\projects\statusmine\framework\web\CBaseController.php(88): CBaseController->renderInternal('C:\Aks\webRoot\...', NULL, true)
+#5 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(866): CBaseController->renderFile('C:\Aks\webRoot\...', NULL, true)
+#6 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(779): CController->renderPartial('index', NULL, true)
+#7 C:\Aks\webRoot\projects\statusmine\protected\controllers\SiteController.php(46): CController->render('index')
+#8 C:\Aks\webRoot\projects\statusmine\framework\web\actions\CInlineAction.php(50): SiteController->actionIndex()
+#9 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(300): CInlineAction->runWithParams(Array)
+#10 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(278): CController->runAction(Object(CInlineAction))
+#11 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(257): CController->runActionWithFilters(Object(CInlineAction), Array)
+#12 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(277): CController->run('')
+#13 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('')
+#14 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#15 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#16 {main} REQUEST_URI=/
+2011/08/27 01:57:48 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 01:58:12 [error] [exception.CHttpException.400] exception 'CHttpException' with message 'Your request is not valid.' in C:\Aks\webRoot\projects\statusmine\framework\web\CController.php:1131
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CInlineFilter.php(59): CController->filterAjaxOnly(Object(CFilterChain))
+#1 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#2 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#3 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(1144): CFilter->filter(Object(CFilterChain))
+#4 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#5 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#6 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(283): CFilterChain->run()
+#7 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(257): CController->runActionWithFilters(Object(CInlineAction), Array)
+#8 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(277): CController->run('render')
+#9 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(749): CWebApplication->runController('/project/render')
+#10 C:\Aks\webRoot\projects\statusmine\protected\views\site\index.php(35): CController->forward('/project/render', false)
+#11 C:\Aks\webRoot\projects\statusmine\framework\web\CBaseController.php(119): require('C:\Aks\webRoot\...')
+#12 C:\Aks\webRoot\projects\statusmine\framework\web\CBaseController.php(88): CBaseController->renderInternal('C:\Aks\webRoot\...', NULL, true)
+#13 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(866): CBaseController->renderFile('C:\Aks\webRoot\...', NULL, true)
+#14 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(779): CController->renderPartial('index', NULL, true)
+#15 C:\Aks\webRoot\projects\statusmine\protected\controllers\SiteController.php(46): CController->render('index')
+#16 C:\Aks\webRoot\projects\statusmine\framework\web\actions\CInlineAction.php(50): SiteController->actionIndex()
+#17 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(300): CInlineAction->runWithParams(Array)
+#18 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(278): CController->runAction(Object(CInlineAction))
+#19 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(257): CController->runActionWithFilters(Object(CInlineAction), Array)
+#20 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(277): CController->run('')
+#21 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('')
+#22 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#23 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#24 {main} REQUEST_URI=/
+2011/08/27 01:58:44 [error] [exception.CHttpException.400] exception 'CHttpException' with message 'Your request is not valid.' in C:\Aks\webRoot\projects\statusmine\framework\web\CController.php:1131
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CInlineFilter.php(59): CController->filterAjaxOnly(Object(CFilterChain))
+#1 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#2 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#3 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(1144): CFilter->filter(Object(CFilterChain))
+#4 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#5 C:\Aks\webRoot\projects\statusmine\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#6 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(283): CFilterChain->run()
+#7 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(257): CController->runActionWithFilters(Object(CInlineAction), Array)
+#8 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(277): CController->run('render')
+#9 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(749): CWebApplication->runController('/project/render')
+#10 C:\Aks\webRoot\projects\statusmine\protected\views\site\index.php(35): CController->forward('/project/render', false)
+#11 C:\Aks\webRoot\projects\statusmine\framework\web\CBaseController.php(119): require('C:\Aks\webRoot\...')
+#12 C:\Aks\webRoot\projects\statusmine\framework\web\CBaseController.php(88): CBaseController->renderInternal('C:\Aks\webRoot\...', NULL, true)
+#13 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(866): CBaseController->renderFile('C:\Aks\webRoot\...', NULL, true)
+#14 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(779): CController->renderPartial('index', NULL, true)
+#15 C:\Aks\webRoot\projects\statusmine\protected\controllers\SiteController.php(46): CController->render('index')
+#16 C:\Aks\webRoot\projects\statusmine\framework\web\actions\CInlineAction.php(50): SiteController->actionIndex()
+#17 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(300): CInlineAction->runWithParams(Array)
+#18 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(278): CController->runAction(Object(CInlineAction))
+#19 C:\Aks\webRoot\projects\statusmine\framework\web\CController.php(257): CController->runActionWithFilters(Object(CInlineAction), Array)
+#20 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(277): CController->run('')
+#21 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('')
+#22 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#23 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#24 {main} REQUEST_URI=/
+2011/08/27 02:00:50 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:02:24 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:04:42 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "favicon.ico".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('favicon.ico')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/favicon.ico
+2011/08/27 02:04:44 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "templates/t1.html".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('templates/t1.ht...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/templates/t1.html
+2011/08/27 02:04:44 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "templates/theme/styles.css".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('templates/theme...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/templates/theme/styles.css
+2011/08/27 02:04:44 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "templates/js/jquery.min.js".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('templates/js/jq...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/templates/js/jquery.min.js
+2011/08/27 02:04:44 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "templates/js/jquery.plugins.js".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('templates/js/jq...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/templates/js/jquery.plugins.js
+2011/08/27 02:04:44 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "templates/js/main.js".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('templates/js/ma...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/templates/js/main.js
+2011/08/27 02:04:44 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "templates/js/jquery.plugins.js".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('templates/js/jq...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/templates/js/jquery.plugins.js
+2011/08/27 02:04:44 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "templates/js/main.js".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('templates/js/ma...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/templates/js/main.js
+2011/08/27 02:04:54 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:05:01 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:05:02 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:05:59 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:06:29 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:07:00 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:09:08 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:10:48 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:11:18 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:11:25 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:11:40 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:12:04 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:12:45 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:14:18 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:14:29 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:14:38 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:15:13 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:15:56 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:16:17 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:17:15 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:18:12 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:19:01 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:19:09 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:20:27 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:20:42 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:21:21 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:22:07 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:22:50 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:23:05 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:23:19 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:23:29 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:24:07 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:24:07 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:24:11 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "favicon.ico".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('favicon.ico')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/favicon.ico
+2011/08/27 02:24:11 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "favicon.ico".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('favicon.ico')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/favicon.ico
+2011/08/27 02:24:13 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "favicon.ico".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('favicon.ico')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/favicon.ico
+2011/08/27 02:24:13 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "favicon.ico".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('favicon.ico')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/favicon.ico
+2011/08/27 02:25:35 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:25:45 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:25:47 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:25:50 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
+2011/08/27 02:25:54 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "theme/img/outer_glow.png.png".' in C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Aks\webRoot\projects\statusmine\framework\web\CWebApplication.php(136): CWebApplication->runController('theme/img/outer...')
+#1 C:\Aks\webRoot\projects\statusmine\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Aks\webRoot\projects\statusmine\public\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/theme/img/outer_glow.png.png
