@@ -21,30 +21,37 @@ class ElementController extends CController {
 	public function actionIndex() {
 		if (Yii::app()->getRequest()->getIsAjaxRequest()) {
 			if (Yii::app()->getRequest()->getIsPostRequest()) {
+				// json
 				$this->run('status');
 			} else {
+				// html
 				$this->run('render');
 			}
 		} else {
+			// separated page
 			$this->run('view');
 		}
 	}
 	
-	public function actionView($data = null) {
+	public function actionView($data = array()) {
 		$base = Yii::app()->getUrlManager()->getBaseUrl();
-		$url = Yii::app()->getUrlManager()->createUrl($this->route);
-		$this->render('//elements/'.$this->id, array('base'=>$base, 'url'=>$url, 'data'=>$data));
+		$url = Yii::app()->getUrlManager()->createUrl($this->id);
+		$this->render('//elements/envelope', array('base'=>$base, 'url'=>$url, 'data'=>$data));
 	}
 	
-	public function actionRender($data = null) {
+	public function actionRender($data = array()) {
 		$base = Yii::app()->getUrlManager()->getBaseUrl();
-		$url = Yii::app()->getUrlManager()->createUrl($this->route);
-		$this->renderPartial('//elements/'.$this->id, array('base'=>$base, 'url'=>$url, 'data'=>$data));
+		$url = Yii::app()->getUrlManager()->createUrl($this->id);
+		if (Yii::app()->getRequest()->getIsAjaxRequest()) {
+			$this->renderPartial('//elements/'.$this->id, array('base'=>$base, 'url'=>$url, 'data'=>$data));
+		} else {
+			$this->renderPartial('//elements/envelope', array('base'=>$base, 'url'=>$url, 'data'=>$data));
+		}
 	}
 	
-	public function actionStatus($data = null) {
+	public function actionStatus($data = array()) {
 		$base = Yii::app()->getUrlManager()->getBaseUrl();
-		$url = Yii::app()->getUrlManager()->createUrl($this->route);
+		$url = Yii::app()->getUrlManager()->createUrl($this->id);
 		print(json_encode(array('base'=>$base, 'url'=>$url, 'data'=>$data)));
 	}
 }

@@ -169,41 +169,41 @@ table {
     white-space: nowrap;
 }
 
-.name {
+.projectname {
     display: inline-block;
     width: 9em;
     margin: 0 0 0 .5em;
     overflow: hidden;
 }
 
-.name .inset {
+.projectname .inset {
     border: .3em;
     opacity: .5;
 }
 
-.progress {
+.projectprogress {
     display: inline-block;
     width: 15em;
     margin: 0 0 0 .5em;
 	overflow: hidden;
 }
 
-.progress .inset {
+.projectprogress .inset {
     border: .3em;
     opacity: .5;
 }
 
-.progress .outset {
+.projectprogress .outset {
     border: .3em;
     opacity: .5;
 }
 
-.progress .bar {
+.projectprogress .bar {
     min-width: 1em;
     text-align: right;
 }
 
-.deadline {
+.projectdeadline {
     display: inline-block;
     width: 5em;
     margin: 0 0 0 .5em;    
@@ -211,29 +211,29 @@ table {
 	overflow: hidden;
 }
 
-.deadline .inset {
+.projectdeadline .inset {
     border: .3em;
     opacity: .5;
 }
 
-.users {
+.projectusers {
     display: inline-block;
     width: 9em;
     margin: 0 0 0 .5em;
     text-align: center;
 }
 
-.users .gravatar {
+.projectusers .gravatar {
     display: inline-block;
     margin: 0 .2em .2em;
 }
 
-.users img {
+.projectusers img {
     height: 1.5em;
     width: 1.5em;
 }
 
-.users .outerglow {
+.projectusers .outerglow {
     border: .5em;
     margin: -.5em;
     opacity: .5;

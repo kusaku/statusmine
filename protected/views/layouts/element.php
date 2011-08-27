@@ -2,9 +2,9 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Running <?= CHtml::encode($this->getId()); ?></title>
+		<title>running <?= CHtml::encode($this->getId()); ?> element</title>
 		<style type="text/css">
-			@import url("theme/styles.css") tv, screen;
+			@import url("/theme/styles.css") tv, screen;
 		</style>
 		<style type="text/css">
 			body {
@@ -16,9 +16,10 @@
 				display: inline-block;				
 			}
 		</style>
-		<script type="text/javascript" src="js/jquery.min.js"></script>
-		<script type="text/javascript" src="js/jquery.plugins.js"></script>
-		<script type="text/javascript" src="js/main.js"></script>
+		<script type="text/javascript" src="/js/jquery.min.js"></script>
+		<script type="text/javascript" src="/js/jquery-ui.custom.min.js"></script>
+		<script type="text/javascript" src="/js/jquery.plugins.js"></script>
+		<script type="text/javascript" src="/js/main.js"></script>
 		</script>
 	</head>
 	<body>

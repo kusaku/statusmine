@@ -50,7 +50,7 @@
 	$.fn.extend({
 		autoUpdate: function(data){
 			var options = {
-				manual: true,
+				manual: false,
 				interval: 1000,
 				action: function(dfd){
 					//console.log(dfd);
@@ -133,7 +133,7 @@
 				},
 				
 				destroy: function(){
-					methods['update'].call(this);
+					methods['stop'].call(this);
 					this.removeData('autoUpdate');
 				},
 			};
