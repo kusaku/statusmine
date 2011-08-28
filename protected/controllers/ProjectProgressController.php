@@ -3,7 +3,7 @@
  *
  */
 class ProjectProgressController extends ElementController {
-	public function actionView() {
+	public function actionView($id = false) {
 		$data = array(
 			// процент
 			'percent'=>rand(0, 100),
@@ -12,7 +12,7 @@ class ProjectProgressController extends ElementController {
 		parent::actionView($data);
 	}
 	
-	public function actionRender() {
+	public function actionRender($id = false) {
 		$data = array(
 			// процент
 			'percent'=>rand(0, 100),
@@ -21,7 +21,7 @@ class ProjectProgressController extends ElementController {
 		parent::actionRender($data);
 	}
 	
-	public function actionStatus() {
+	public function actionStatus($id = false) {
 		$data = array(
 			// процент
 			'percent'=>rand(0, 100),

@@ -140,8 +140,13 @@ table {
 /**
  * elements style begin below
  */
+
 .header {
     border-bottom: .1em solid #818181;
+}
+    
+.header.standalone {
+	border-bottom: none;
 }
 
 .header .text {
@@ -157,7 +162,7 @@ table {
     margin: .5em 0 0 0;
 }
 
-.project .text {
+.element.projectname .text, .element.projectprogress .text, .element.projectdeadline .text, .element.projectusers .text {
     padding: 0 .7em;
     color: #ffffff;
     line-height: 200%;
@@ -185,7 +190,7 @@ table {
     display: inline-block;
     width: 15em;
     margin: 0 0 0 .5em;
-	overflow: hidden;
+    overflow: hidden;
 }
 
 .projectprogress .inset {
@@ -206,9 +211,9 @@ table {
 .projectdeadline {
     display: inline-block;
     width: 5em;
-    margin: 0 0 0 .5em;    
+    margin: 0 0 0 .5em;
     text-align: center;
-	overflow: hidden;
+    overflow: hidden;
 }
 
 .projectdeadline .inset {
@@ -245,6 +250,7 @@ table {
     text-align: center;
     overflow: hidden;
     font-weight: bold;
+	margin: 0 0 .7em;
 }
 
 .calendar .time {

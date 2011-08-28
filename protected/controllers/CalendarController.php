@@ -2,19 +2,19 @@
 /**
  *
  */
-class ProjectNameController extends ElementController {
+class CalendarController extends ElementController {
 	public function actionView($id = false) {
-		$data = array('name'=>md5(rand(0, 100)));
+		$data = array('id'=>$id);
 		parent::actionView($data);
 	}
 	
 	public function actionRender($id = false) {
-		$data = array('name'=>md5(rand(0, 100)));
+		$data = array('id'=>$id);
 		parent::actionRender($data);
 	}
 	
 	public function actionStatus($id = false) {
-		$data = array('name'=>md5(rand(0, 100)));
+		$data = array('id'=>$id);
 		parent::actionStatus($data);
 	}
 }

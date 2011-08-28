@@ -3,7 +3,7 @@
  *
  */
 class ProjectDeadlineController extends ElementController {
-	public function actionView() {
+	public function actionView($id = false) {
 		$data = array(
 			// цвет
 			'color'=>'rgb('.rand(0, 255).','.rand(0, 255).','.rand(0, 255).')',
@@ -12,22 +12,21 @@ class ProjectDeadlineController extends ElementController {
 		parent::actionView($data);
 	}
 	
-	public function actionRender() {
-        $data = array(
-            // цвет
-            'color'=>'rgb('.rand(0, 255).','.rand(0, 255).','.rand(0, 255).')',
-            // дата
-            'date'=>date('d.m.Y', strtotime('+ '.rand(0, 365).' days')));
+	public function actionRender($id = false) {
+		$data = array(
+			// цвет
+			'color'=>'rgb('.rand(0, 255).','.rand(0, 255).','.rand(0, 255).')',
+			// дата
+			'date'=>date('d.m.Y', strtotime('+ '.rand(0, 365).' days')));
 		parent::actionRender($data);
 	}
 	
-	public function actionStatus() {
-        $data = array(
-            // цвет
-            'color'=>'rgb('.rand(0, 255).','.rand(0, 255).','.rand(0, 255).')',
-            // дата
-            'date'=>date('d.m.Y', strtotime('+ '.rand(0, 365).' days')));
+	public function actionStatus($id = false) {
+		$data = array(
+			// цвет
+			'color'=>'rgb('.rand(0, 255).','.rand(0, 255).','.rand(0, 255).')',
+			// дата
+			'date'=>date('d.m.Y', strtotime('+ '.rand(0, 365).' days')));
 		parent::actionStatus($data);
 	}
 }
-

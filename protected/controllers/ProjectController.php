@@ -3,15 +3,18 @@
  *
  */
 class ProjectController extends ElementController {
-	public function actionView() {
-		parent::actionView();
+	public function actionView($id = false) {
+		$data = array('id'=>$id);
+		parent::actionView($data);
 	}
 	
-	public function actionRender() {
-		parent::actionRender();
+	public function actionRender($id = false) {
+		$data = array('id'=>$id);
+		parent::actionRender($data);
 	}
 	
-	public function actionStatus() {
-		parent::actionStatus();
+	public function actionStatus($id = false) {
+		$data = array('id'=>$id);
+		parent::actionStatus($data);
 	}
 }

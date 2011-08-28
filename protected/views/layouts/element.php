@@ -13,7 +13,8 @@
 				text-align: center;
 			}
 			body > div {
-				display: inline-block;				
+				display: inline-block;
+				font-size: 150%;
 			}
 		</style>
 		<script type="text/javascript" src="/js/jquery.min.js"></script>
@@ -24,7 +25,7 @@
 	</head>
 	<body>
 		<div class="fullh"></div>
-		<?= $content; ?>
+		<div><?= $content; ?></div>
 		<div class="fullh"></div>
 	</body>
 </html>

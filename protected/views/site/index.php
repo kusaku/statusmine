@@ -22,30 +22,28 @@
 	</div>
 	<div class="right fullh">
 		<div class="layout fullh">
-			<div class="calendar">
-				<div class="time">22<span>:</span>22</div>
-				<div class="date">чт, 7 апреля 1983</div>
-				<div class="innershadow full"></div>
-			</div>
+			<?php foreach (array(100, 200) as $_GET['id']): ?>
+			<?php $this->forward('/calendar/render', false); ?>
+			<?php endforeach; ?>
 		</div>
 	</div>
 </div>
 <?php 
 /*
- <h1>Welcome to <i><?php echo CHtml::encode(Yii::app()->name); ?></i></h1>
- <?php
- //print_r($issues);
- foreach ($issues as $issue) {
- print $issue->id.' '.
- $issue->subject.' '.
- $issue->updated_on.' '.
- $issue->author['name'].' '.
- $issue->done_ratio.'% '.
- '<img src="'.Redmine::getUserAvatarUrlById( $issue->author['id'] , 20).'">'.
- ' -> '.
- $issue->assigned_to['name'].
- '<img src="'.Redmine::getUserAvatarUrlById( $issue->assigned_to['id'] , 20).'">'.
- '<br>';
- }
- ?>
- */
+<h1>Welcome to <i><?php echo CHtml::encode(Yii::app()->name); ?></i></h1>
+<?php
+//print_r($issues);
+foreach ($issues as $issue) {
+print $issue->id.' '.
+$issue->subject.' '.
+$issue->updated_on.' '.
+$issue->author['name'].' '.
+$issue->done_ratio.'% '.
+'<img src="'.Redmine::getUserAvatarUrlById( $issue->author['id'] , 20).'">'.
+' -> '.
+$issue->assigned_to['name'].
+'<img src="'.Redmine::getUserAvatarUrlById( $issue->assigned_to['id'] , 20).'">'.
+'<br>';
+}
+*/
+?>
