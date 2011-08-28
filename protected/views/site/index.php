@@ -18,29 +18,13 @@
 ?>
 <div class="outer full">
 	<div class="left fullh">
-		<div class="header">
-			<div class="name">
-				<span class="text">Проект</span>
-			</div>
-			<div class="progress">
-				<span class="text">Прогресс</span>
-			</div>
-			<div class="deadline">
-				<span class="text">Dead Line</span>
-			</div>
-			<div class="users">
-				<span class="text">Участники</span>
-			</div>
-		</div>
-		<?php $this->forward('/project/render', false); ?>
+		<?php $this->forward('/projects/render', false); ?>
 	</div>
 	<div class="right fullh">
 		<div class="layout fullh">
-			<div class="calendar">
-				<div class="time">22:22</div>
-				<div class="date">чт, 7 апреля 1983</div>
-				<div class="innershadow full"></div>
-			</div>
+			<?php foreach (array(100, 200) as $_GET['id']): ?>
+			<?php $this->forward('/calendar/render', false); ?>
+			<?php endforeach; ?>
 		</div>
 	</div>
 </div>

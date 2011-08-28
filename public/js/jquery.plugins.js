@@ -50,23 +50,20 @@
 	$.fn.extend({
 		autoUpdate: function(data){
 			var options = {
-				manual: true,
+				manual: false,
 				interval: 1000,
+				waitOthers: true,
 				action: function(dfd){
-					//console.log(dfd);
 					Math.random() > .5 ? dfd.resolveWith(this) : dfd.rejectWith(this);
 				},
 				success: function(){
-					//console.log('success');
 				},
 				error: function(){
-					//console.log('error');
 				},
 			};
 			
 			var methods = {
 				init: function(){
-					////console.log('init');
 					if (this.data('autoUpdate')) {
 						var settings = $.extend(this.data('autoUpdate'), data);
 					}
@@ -80,25 +77,27 @@
 				},
 				
 				start: function(){
-					////console.log('start');
 					var settings = this.data('autoUpdate'), elem = this;
 					if (!settings || settings.manual) 
 						return;
 					
-					clearTimeout(settings._tid);
-					
 					(function(){
-						////console.log('lambda');
+						var dfd = settings._dfd = new jQuery.Deferred();
+						
 						var lambda = arguments.callee;
-						////console.log('lambda: new dfd');
-						settings._dfd = new jQuery.Deferred();
 						
-						jQuery.when(settings._dfd).always(function(name){
-							settings._tid = setTimeout(lambda, settings.interval);
-						});
+						if (settings.waitOthers) {
+							window._dfd_pipe = (window._dfd_pipe) ? window._dfd_pipe.pipe(lambda, lambda) : dfd.pipe(lambda, lambda)
+						}
+						else {
+							dfd.always(lambda)
+						}
 						
-						methods['update'].call(elem);
+						settings._tid = setTimeout(function(){
+							methods['update'].call(elem);
+						}, settings.interval);
 						
+						return dfd;
 					})();
 				},
 				
@@ -113,17 +112,13 @@
 				},
 				
 				update: function(){
-				
-					////console.log('update');
 					var settings = this.data('autoUpdate'), elem = this;
 					if (!settings) 
 						return;
 					
-					//console.log('update ' + elem.get(0).tagName + elem.index());
 					clearTimeout(settings._tid);
 					
 					if (!settings._dfd || settings._dfd.isResolved() || settings._dfd.isRejected()) {
-						////console.log('update: new dfd');
 						settings._dfd = new jQuery.Deferred()
 					}
 					
@@ -133,7 +128,7 @@
 				},
 				
 				destroy: function(){
-					methods['update'].call(this);
+					methods['stop'].call(this);
 					this.removeData('autoUpdate');
 				},
 			};
@@ -177,6 +172,7 @@
 					
 					this.autoUpdate({
 						manual: false,
+						waitOthers: false,
 						interval: options.interval,
 						action: function(dfd){
 							direction ? this.animate({
