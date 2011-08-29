@@ -16,7 +16,7 @@
     </div>
 </div>
 <?php unset($_SERVER['HTTP_X_REQUESTED_WITH']); ?>
-<?php foreach (array(5, 3, 1) as $_GET['id']): ?>
+<?php foreach (array(5, 3, 1, 5, 3, 1) as $_GET['id']): ?>
 <?php $this->forward('/project/render', false); ?>
 <?php endforeach; ?>
 <?php endif; ?>

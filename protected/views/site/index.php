@@ -22,9 +22,8 @@
 	</div>
 	<div class="right fullh">
 		<div class="layout fullh">
-			<?php foreach (array(100, 200) as $_GET['id']): ?>
 			<?php $this->forward('/calendar/render', false); ?>
-			<?php endforeach; ?>
+			<?php $this->forward('/messages/render', false); ?>
 		</div>
 	</div>
 </div>

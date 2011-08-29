@@ -65,8 +65,8 @@ $(function(){
 			action: function(dfd){
 				var elem = this;
 				jQuery.post(this.attr('href'), function(json){
-					elem.fadeOut(function(){
-						elem.find('.text').text(json.data.name);
+					elem.find('.text').fadeOut(function(){
+						$(this).text(json.data.name);
 					}).fadeIn(function(){
 						dfd.resolveWith(elem);
 					});
@@ -82,7 +82,10 @@ $(function(){
 			action: function(dfd){
 				var elem = this;
 				jQuery.post(this.attr('href'), function(json){
-					elem.find('.text').text(json.data.percent + '%');
+					elem.find('.text').fadeOut(function(){
+						$(this).text(json.data.name);
+					}).fadeIn();
+					
 					elem.find('.bar').animate({
 						'width': json.data.percent + '%',
 						'background-color': json.data.color,
@@ -106,7 +109,10 @@ $(function(){
 			action: function(dfd){
 				var elem = this;
 				jQuery.post(this.attr('href'), function(json){
-					elem.find('.text').text(json.data.date);
+					elem.find('.text').fadeOut(function(){
+						$(this).text(json.data.name);
+					}).fadeIn();
+					
 					elem.find('.inset').animate({
 						'background-color': json.data.color,
 					}, {
@@ -141,25 +147,52 @@ $(function(){
 	});
 	
 	// привязываем обновление посторочно
-	$('.element.projects').each(function(index, element){
+	$('.element.project').each(function(index, element){
 		$(this).find('.element.projectname, .element.projectprogress, .element.projectdeadline, .element.projectusers').trigger('autoUpdate');
 	});
 	
 	$('.element.calendar').live('autoUpdate', function(event){
+		// разностное время
+		var diffDate = 0;
+		
 		$(this).autoUpdate({
+			interval: 1000,
+			waitOthers: true,
+			action: function(dfd){
+				var elem = this;
+				jQuery.post(this.attr('href'), function(json){
+					diffDate = (new Date()).getTime() - json.data.date * 1000;
+					dfd.resolveWith(elem);
+				}, 'json');
+			},
+		});
+		
+		$(this).find('.time').autoUpdate({
 			interval: 500,
 			waitOthers: false,
 			action: function(dfd){
 				var dots = this.data('dots') ? false : true;
 				this.data('dots', dots);
-				var dow = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
-				var moy = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
-				var d = new Date();
+				var d = new Date((new Date()).getTime() - diffDate);
 				var pad = function(val, num){
 					return (--num && Math.pow(10, num) > val) ? pad('0' + val, num) : val;
 				}
-				this.find('.time').html(d.getHours() + (dots ? '<span style="opacity:0">:</span>' : '<span>:</span>') + pad(d.getMinutes(), 2));
-				this.find('.date').html(dow[d.getDay()] + ', ' + d.getDate() + ' ' + moy[d.getMonth()] + ' ' + (1900 + d.getYear()));
+				this.html(pad(d.getHours(), 2) + (dots ? '<span style="opacity:0">:</span>' : '<span>:</span>') + pad(d.getMinutes(), 2));
+				dfd.resolveWith(this);
+			}
+		});
+		
+		$(this).find('.date').autoUpdate({
+			interval: 10000,
+			waitOthers: false,
+			action: function(dfd){
+				var dow = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
+				var moy = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
+				var d = new Date((new Date()).getTime() - diffDate);
+				var pad = function(val, num){
+					return (--num && Math.pow(10, num) > val) ? pad('0' + val, num) : val;
+				}
+				this.html(dow[d.getDay()] + ', ' + d.getDate() + ' ' + moy[d.getMonth()] + ' ' + d.getFullYear());
 				dfd.resolveWith(this);
 			}
 		});
@@ -169,7 +202,7 @@ $(function(){
 		$(this).bind('mouseover', function(event){
 			event.stopPropagation();
 			$(this).css({
-				'background-color': '#494949',
+				'background-color': '#404040',
 				'cursor': 'pointer'
 			});
 		});

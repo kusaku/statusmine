@@ -112,6 +112,16 @@ table {
     -border-image: url("img/inner_shadow_round.png") 30 30 repeat;
 }
 
+.outershadow {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    -moz-border-image: url("img/outer_shadow.png") 30 30 repeat; /* Firefox */
+    -webkit-border-image: url("img/outer_shadow.png") 30 30 repeat; /* Safari and Chrome */
+    -o-border-image: url("img/outer_shadow.png") 30 30 repeat; /* Opera */
+    -border-image: url("img/outer_shadow.png") 30 30 repeat;
+}
+
 /**
  * layout styles begin below
  */
@@ -126,6 +136,7 @@ table {
     background-color: #383838;
     float: left;
     width: 70%;
+    overflow: hidden;
 }
 
 .right {
@@ -140,13 +151,12 @@ table {
 /**
  * elements style begin below
  */
-
 .header {
     border-bottom: .1em solid #818181;
 }
-    
+
 .header.standalone {
-	border-bottom: none;
+    border-bottom: none;
 }
 
 .header .text {
@@ -238,19 +248,19 @@ table {
     width: 1.5em;
 }
 
-.projectusers .outerglow {
+.projectusers .outershadow {
     border: .5em;
-    margin: -.5em;
+    margin: -.4em -.6em -.6em -.4em;
     opacity: .5;
 }
 
-.calendar {
+.element.calendar {
     color: #ffffff;
     background-color: #0e0e0e;
     text-align: center;
     overflow: hidden;
     font-weight: bold;
-	margin: 0 0 .7em;
+    margin: 0 0 .7em;
 }
 
 .calendar .time {
@@ -266,4 +276,27 @@ table {
 .calendar .innershadow {
     border: 2em;
     opacity: .9;
+}
+
+.messages {	
+    height: 50%;
+	overflow: hidden;
+    position: absolute;
+    bottom: 0;
+}
+
+.messages .inset {
+    border: .3em;
+    opacity: .5;
+}
+
+.message {	
+	margin: .5em;
+}
+
+.message .text {
+    color: #ffffff;
+    line-height: 200%;
+    font-size: 50%;
+    text-align: right;
 }
