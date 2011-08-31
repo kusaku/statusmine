@@ -25,7 +25,7 @@
 	</head>
 	<body>
 		<div class="fullh"></div>
-		<div><?= $content; ?></div>
+		<div class="content"><?= $content; ?></div>
 		<div class="fullh"></div>
 	</body>
 </html>

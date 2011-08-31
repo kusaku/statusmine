@@ -2,7 +2,7 @@
 /**
  *
  */
-class ProjectDeadlineController extends ElementController {
+class ProjectdeadlineController extends ElementController {
 	public function actionView($id = false) {
 		$data = array(
 			// цвет

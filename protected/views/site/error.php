@@ -1,12 +1,9 @@
-<?php
-$this->pageTitle=Yii::app()->name . ' - Error';
-/*$this->breadcrumbs=array(
-	'Error',
-);*/
-?>
-
-<h2>Error <?php echo $code; ?></h2>
-
-<div class="error">
-<?php echo CHtml::encode($message); ?>
+<?php $this->pageTitle = Yii::app()->name.' - Error'; ?>
+<div class="header standalone">
+	<div class="<?= $this->getId(); ?>">
+		<span class="text">Error <?= $code; ?></span>
+	</div>
+</div>
+<div href="<?= @$_SERVER['HTTP_REFERER']; ?>" class="element error" style="font-size:50%">
+	<pre><?= CHtml::encode($message); ?></pre>
 </div>

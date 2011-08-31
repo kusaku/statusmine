@@ -1,224 +1,1006 @@
-<?php
+<?php 
 /*
-* This file is part of StatusMine.
-*
-* StatusMine is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* StatusMine is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with MailTeleport. If not, see <http://www.gnu.org/licenses/>.
-*/
-class Redmine
-{
-	private static function runRequest($restUrl, $method = 'GET', $data = "")
-	{
-		$config = Yii::app()->params['RedmineConfig'];
+ * This file is part of StatusMine.
+ *
+ * StatusMine is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * StatusMine is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MailTeleport. If not, see <http://www.gnu.org/licenses/>.
+ */
 
-		// Формируем правильный урл
-		$url = $config['protocol'].'://'.$config['url'];
-
-        $method = mb_strtolower($method);
-        $curl = curl_init();
-
-		switch ($method) {
-			case "post":
-				curl_setopt($curl, CURLOPT_POST, 1);
-				if(isset($data)) curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-				break;
-			case "put":
-				curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PUT'); 
-				if(isset($data)) curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-				break;
-			case "delete":
-				curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
-				break;
-			default: // get
-				break;
+/**
+ * коннектор Redmine
+ */
+class RedmineConnector {
+	/**
+	 * получить о курле
+	 * @param resourse $curl
+	 * @return
+	 */
+	private static function getCurlInfo($curl) {
+		$errors = '';
+		foreach (curl_getinfo($curl) as $key=>$value)
+			$errors .= "\n{$key}: {$value}";
+		return $errors;
+	}
+	
+	/**
+	 * получить инфо об ошибке XML
+	 * @return
+	 */
+	private static function getXMLErrors() {
+		$errors = '';
+		foreach (libxml_get_errors() as $error) {
+			$errors .= "line {$error->line}: {$error->message}";
 		}
- 
-		try {
-			curl_setopt($curl, CURLOPT_URL, $url.$restUrl);
+		return $errors;
+	}
+	
+	/**
+	 * запрос к Redmine
+	 * @param string $function url функции
+	 * @param SimpleXMLElement $data [optional] параметры
+	 * @param object $method [optional] метод запроса
+	 * @return SimpleXMLElement
+	 */
+	public static function runRequest($function, $data = null, $method = 'GET') {
+	
+		// здесь кешируем все GET запросы в течении жизни проложения
+		static $cache;
+		static $config;
+		
+		// уникальный хеш запроса
+		$hash = md5($function.','.$data);
+		
+		// если не GET запрос или нет в кеше
+		if ($method != 'GET' or !isset($cache[$hash])) {
+		
+			// плюемся исключением, если нет курля
+			if (!function_exists('curl_init'))
+				throw new CHttpException(500, 'cURL is not installed');
+				
+			// пытаемся прочитать конфиг
+			if (!($config or $config = Yii::app()->params['redmineConfig']))
+				throw new CHttpException(500, 'Redmine config is not defined');
+				
+			// плюемся, если в настройках не разрешено использовать Redmine
+			if (!$config['enabled'])
+				throw new CHttpException(500, 'Redmine is disabled');
+				
+			// формируем url сервара с указанием протокола
+			$url = $config['protocol'].'://'.$config['url'];
+			
+			// открываем ресурс
+			$curl = curl_init();
+			
+			// ставим курлю тип запроса
+			$method = strtoupper(trim($method));
+			switch ($method) {
+				case 'POST':
+					curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
+					curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+					break;
+				case 'PUT':
+					curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PUT');
+					curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+					break;
+				case 'DELETE':
+					curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
+					curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+					break;
+				default:
+					curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+					curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+				case 'GET':
+					break;
+			}
+			
+			// формируем url запроса
+			curl_setopt($curl, CURLOPT_URL, $url.'/'.$function);
 			curl_setopt($curl, CURLOPT_PORT, $config['port']);
-			curl_setopt($curl, CURLOPT_USERPWD, $config['rootLogin'].":".$config['rootPassword'] );
-
-			curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+			
+			if (stristr('users.xml', $function))
+				// от имени текущего пользователя
+				curl_setopt($curl, CURLOPT_USERPWD, "{$config['rootLogin']}:{$config['rootPassword']}");
+			else
+				// от имени Димы Кривчикова
+				curl_setopt($curl, CURLOPT_USERPWD, "{$config['rootLogin']}:{$config['rootPassword']}");
+				
+			// пробуем все типы авторизации
+			curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+			
+			// если мы сидим за проксей
+			if (2 == count(@list($proxy, $port) = explode(':', @$config['proxy']))) {
+				curl_setopt($curl, CURLOPT_PROXY, $proxy);
+				curl_setopt($curl, CURLOPT_PROXYPORT, $port);
+				//curl_setopt($curl, CURLOPT_PROXYAUTH,  CURLAUTH_BASIC | CURLAUTH_NTLM);
+				//curl_setopt($curl, CURLOPT_PROXYUSERPWD, "user:password");
+			}
+			
+			// не проверяем SSL сертификаты
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+			
+			// каждый раз открывать новую сессию
 			curl_setopt($curl, CURLOPT_COOKIESESSION, true);
-			curl_setopt($curl, CURLOPT_VERBOSE, false);
-			curl_setopt($curl, CURLOPT_HEADER, false);
-			curl_setopt($curl, CURLOPT_AUTOREFERER, false);
+			
+			// быть разговорчивым
+			//curl_setopt($curl, CURLOPT_VERBOSE, true);
+			
+			// возвращать результат curl_exec()
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: text/xml", "Charset=utf-8", "Content-length: ".strlen($data)));
- 
-			$response = curl_exec($curl); 
-			if(!curl_errno($curl)){ 
-		  		$info = curl_getinfo($curl);
-			} else {
-				curl_close($curl); 
-				return false;
-			}
-			curl_close($curl); 
-		} catch (Exception $e) {
-    		return false;
-		}
+			// не нужны HTTP заголовки
+			curl_setopt($curl, CURLOPT_HEADER, false);
+			// следовать редиректам (301, 302, Location: ...)
+			curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+			// 10 метров буфера, должно хватить
+			curl_setopt($curl, CURLOPT_BUFFERSIZE, 1024 * 1024 * 10); // max 10 mb!
+			// кодировка UTF-8 и длина сообщения
+			curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: text/xml; charset=UTF-8', 'Content-Length: '.strlen($data)));
 
-		if($response) {
-			if(substr($response, 0, 5) == '<?xml') {
-				return new SimpleXMLElement($response);
-			} else {
-				return false;
+			
+			// делаем запрос
+			if (false === $response = curl_exec($curl))
+				throw new CHttpException(500, 'cURL request failed: '.curl_error($curl));
+				
+			$http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+			
+			// проверяем успешность
+			switch ($method) {
+				case 'POST':
+					if (!in_array($http_code, array(201, 422)))
+						throw new CHttpException(500, 'cURL request failed: '.self::getCurlInfo($curl));
+					break;
+				case 'PUT':
+					if (!in_array($http_code, array(200, 422)))
+						throw new CHttpException(500, 'cURL request failed: '.self::getCurlInfo($curl));
+					break;
+				case 'DELETE':
+					if (!in_array($http_code, array(200, 422)))
+						throw new CHttpException(500, 'cURL request failed: '.self::getCurlInfo($curl));
+					break;
+				case 'GET':
+					if (!in_array($http_code, array(200, 422)))
+						throw new CHttpException(500, 'cURL request failed: '.self::getCurlInfo($curl));
+				default:
+					break;
 			}
+			
+			// закрываем ресурс
+			curl_close($curl);
+			
+			// кэшируем!
+			$method == 'GET' and $cache[$hash] = $response;
+		} else {
+			$response = $cache[$hash];
 		}
-		return true;
-    }
-
-	/**
-	 * Возвращаем список всех пользователей
-	 * @return Object
-	 */
-	public static function getUsers() {
-		return Redmine::runRequest('/users.xml', 'GET', '');
+		
+		libxml_use_internal_errors(true);
+		
+		if (false === $sxml = simplexml_load_string($response))
+			throw new CHttpException(500, 'XML is not well-formed: '.self::getXMLErrors());
+			
+		return $sxml;
 	}
 
+	
 	/**
-	 * Возвращаем массив вида Array( [alaksey.d] => 50 [elena.c] => 39 [igor.p] => 5 ) соответствие Login-ID
-	 * Нужно переделать с учётом, что пользователей может быть более 100
-	 * @return Array
+	 * преобразование xml в массив
+	 * @param object $xml XML
+	 * @param string $index [optional] использовать значение этого ребенка как индекс
+	 * @param bool $withAttributes [optional] вывести атрибуты базового элемента
+	 * @return
 	 */
-	public static function getUsersArray() {
-		$users = Redmine::runRequest('/users.xml?limit=100&status=', 'GET', '');
-		$usersArray = array();
-		foreach ($users as $user) {
-			$usersArray[ trim( mb_strToLower( (string)$user->login ) ) ] = (int)$user->id;
+	protected static function xml2array($xml, $index = false, $withAttributes = false) {
+	
+		$array = array();
+		
+		foreach ($xml->children() as $child=>$node) {
+			// если у элемента несколько одинаковых детей, дети индексируются
+			// по своему атрибуту $index или елементу $index, если его нет - по порядку
+			if (count($xml->$child) > 1) {
+				// у нас несколько одинаковых детей, атрибуты
+				// выводить нельзя - они испортят индекс
+				$withAttributes = false;
+				if ($index and (string) $node[$index]) {
+					$array[(string) $node[$index]] = self::xml2array($node, $index);
+					
+				} elseif ($index and (string) $node->$index) {
+					$array[(string) $node->$index] = self::xml2array($node, $index);
+					
+				} else {
+					echo (string) $node->$index;
+					$array[] = self::xml2array($node, $index, true);
+				}
+				
+			}
+			// если же у ребенка тоже есть несколько детей или атрибутов, идем вглубь
+			elseif (count($node->children()) + count($node->attributes()) > 1) {
+				$array[$child] = self::xml2array($node, $index, true);
+			}
+			// если же нет, вернем значение элемента
+			else {
+				$array[$child] = (string) $node;
+			}
 		}
-		return $usersArray;
+		
+		// дополнительно выведем атрибуты элемента, но это далеко не всегда надо
+		if ($withAttributes) {
+			foreach ($xml->attributes() as $name=>$value) {
+				$array[$name] = (string) $value;
+			}
+		}
+		return $array;
 	}
 
+	
 	/**
-	 * Возвращаем пользователя Redmine по его логину.
-	 * @param String $login
-	 * @return Object
+	 * преобразование из массива в xml
+	 * @param object $base имя корневого элемента
+	 * @param object $children [optional] массив с детьми
+	 * @param object $xml [optional] над элементом объектом работать
+	 * @return SimpleXMLElement
 	 */
-	public static function getUserByLogin($login) {
-		if ( $login ){
-			$login = trim( mb_strToLower( $login ) );
-			$users = Redmine::runRequest('/users.xml?status=&limit=100', 'GET', '');
-			foreach ($users as $user) {
-				if ( trim( mb_strToLower( $user->login ) ) == $login ){
-					return $user;
+	protected static function array2xml($base, $children = null, &$xml = null) {
+	
+		$children or $children = array();
+		$xml or $xml = new SimpleXMLElement("<?xml version='1.0' encoding='UTF-8'?><{$base}/>");
+		
+		foreach ($children as $key=>$value) {
+			if (is_array($value))
+				if ($key == '@attributes') {
+					foreach ($value as $name=>$attr)
+						$xml->addAttribute($name, $attr);
+				} else {
+				self::array2xml($key, $value, $xml);
+			}
+			else
+				$xml->addChild($key, $value);
+		}
+		
+		return $xml;
+	}
+}
+
+/**
+ * модель Redmine
+ */
+class RedmineModel extends RedmineConnector {
+
+	/**
+	 * создать задачу
+	 * @param array $data параметы
+	 * @return array
+	 */
+	public static function createIssue($data) {
+		try {
+			$xml = self::array2xml('issue', $data);
+			return self::xml2array(self::runRequest('issues.xml', $xml->asXML(), 'POST'));
+		}
+		catch(CHttpException $e) {
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+		}
+	}
+	
+	/**
+	 * получить список задач
+	 * @param string $index [optional] по какому полю проекта проидексировать список
+	 * @param string $project_id [optional] get issues from the project with the given id
+	 * @param string $tracker_id [optional] get issues from the tracker with the given id
+	 * @param string $status_id [optional] get issues with the given status id only (you can use * to get open and closed issues)
+	 * @param string $assigned_to_id [optional] get issues which are assigned to the given user id
+	 * @return array
+	 */
+	public static function readIssues($index = 'id', $project_id = false, $tracker_id = false, $status_id = false, $assigned_to_id = false) {
+		static $cached;
+		
+		$queryAdd = '';
+		$project_id and $queryAdd .= "&project_id={$project_id}";
+		$tracker_id and $queryAdd .= "&tracker_id={$tracker_id}";
+		$status_id and $queryAdd .= "&status_id={$status_id}";
+		$assigned_to_id and $queryAdd .= "&assigned_to_id={$assigned_to_id}";
+		
+		$hash = md5($queryAdd);
+		
+		if (!isset($cached[$hash])) {
+			if ($cached[$hash] = Persistent::getData(__METHOD__.'.'.$hash))
+				return $cached[$hash];
+			// если много данных не влезло
+			elseif ($cached[$hash] = Persistent::getData(__METHOD__.'.'.$hash.'.0')) {
+				$index = 1;
+				while ($partial = Persistent::getData(__METHOD__.'.'.$hash.'.'.($index++))) {
+					$cached[$hash] += $partial;
+				}
+				return $cached[$hash];
+			}
+			
+			try {
+				for ($cached[$hash] = array(), $offset = 0, $limit = 50; count($data = self::xml2array(self::runRequest("issues.xml?offset={$offset}&limit={$limit}{$queryAdd}"), $index)); $offset += $limit) {
+					$cached[$hash] += $data;
 				}
 			}
+			catch(CHttpException $e) {
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			}
+			
+			// много данных не влезет, разобъем по 100
+			if (($count = count($cached[$hash])) > 100) {
+				for ($index = 0, $offset = 0, $limit = 100; $offset < $count; $index++, $offset += $limit) {
+					$partial = array_slice($cached[$hash], $offset, $limit, true);
+					// а еще - увеличим время хранения - процедура получения слишком дорого обходится
+					Persistent::setData(__METHOD__.'.'.$hash.'.'.$index, $partial, '+10 minutes');
+				}
+			} else {
+				Persistent::setData(__METHOD__.'.'.$hash, $cached[$hash]);
+			}
 		}
-		return false;
+		
+		return $cached[$hash];
+	}
+	
+	/**
+	 * получить задачу
+	 * @param int $issue_id ID задачи
+	 * @return array
+	 */
+	public static function readIssue($issue_id) {
+		static $cached;
+		
+		$hash = md5($issue_id);
+		
+		if (!isset($cached[$hash])) {
+			if ($cached[$hash] = Persistent::getData(__METHOD__.'.'.$hash))
+				return $cached[$hash];
+				
+			try {
+				$cached[$hash] = self::xml2array(self::runRequest("issues/{$issue_id}.xml?include=relations,journals"), 'id');
+			}
+			catch(CHttpException $e) {
+				Yii::trace('Redmine request failed', __METHOD__);
+			}
+			
+			Persistent::setData(__METHOD__.'.'.$hash, $cached[$hash]);
+		}
+		
+		return $cached[$hash];
+	}
+	
+	/**
+	 * обновить задачу
+	 * @param int $issue_id ID задачи
+	 * @param array $data параметы
+	 * @return array
+	 */
+	public static function updateIssue($issue_id, $data) {
+		try {
+			$xml = self::array2xml('issue', $data);
+			return self::xml2array(self::runRequest("issues/{$issue_id}.xml", $xml->asXML(), 'PUT'));
+		}
+		catch(CHttpException $e) {
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+		}
+	}
+	
+	/**
+	 * удалить задачу
+	 * @param int $version_id ID задачи
+	 * @return array
+	 */
+	public static function deleteIssue($issue_id) {
+		try {
+			return self::xml2array(self::runRequest("issues/{$issue_id}.xml", null, 'DELETE'));
+		}
+		catch(CHttpException $e) {
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+		}
 	}
 
+	
 	/**
-	 *	Return Gravatars URL
-	 *
-	 * @param integer $id
-	 * @param integer $size
-	 * @return string
+	 * создать проект
+	 * @param array $data параметы
+	 * @return array
 	 */
-	public static function getUserAvatarUrlById($id, $size = 50) {
-		if ( $id ){
-			$user = Redmine::runRequest('/users/'.$id.'.xml', 'GET', '');
-			if ($user->mail)
-				return 'http://www.gravatar.com/avatar/'.md5($user->mail).'?s='.$size;
-			else
-				return false;
-		} else
-			return false;
+	public static function createProject($data) {
+		try {
+			$xml = self::array2xml('project', $data);
+			return self::xml2array(self::runRequest('projects.xml', $xml->asXML(), 'POST'));
+		}
+		catch(CHttpException $e) {
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+		}
 	}
 
+	
 	/**
-	 * Возвращаем список всех проектов. Не используется, но коль реалезовано - пусть остаётся.
-	 * @return Object
+	 * получить список проектов
+	 * @param string $index [optional] по какому полю элемента проидексировать список
+	 * @return array
 	 */
-	public static function getProjects() {
-		return Redmine::runRequest('/projects.xml', 'GET', '');
+	public static function readProjects($index = 'id') {
+		static $cached;
+		
+		if (!isset($cached)) {
+			if ($cached = Persistent::getData(__METHOD__))
+				return $cached;
+				
+			try {
+				for ($cached = array(), $offset = 0, $limit = 50; count($data = self::xml2array(self::runRequest("projects.xml?offset={$offset}&limit={$limit}"), $index)); $offset += $limit) {
+					$cached += $data;
+				}
+			}
+			catch(CHttpException $e) {
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			}
+			
+			Persistent::setData(__METHOD__, $cached, '+ 1 hour');
+		}
+		
+		return $cached;
 	}
- 
+	
 	/**
-	 * Возвращаем все задачи проекта. Не используется.
-	 * @param <type> $projectId
-	 * @return Object
+	 * получить проект
+	 * @param string $project_id ID проекта
+	 * @return array
 	 */
-	public static function getIssues($projectId = null) {
-		// Если проект не передали, то используем проект по умолчанию
-		if ( $projectId === null ) $projectId = Yii::app()->params['RedmineConfig']['targetProjectId'];
-		return Redmine::runRequest('/issues.xml?sort=updated_on:desc&page=1&project_id='.$projectId, 'GET', '');
+	public static function readProject($project_id) {
+		static $cached;
+		
+		$hash = md5($project_id);
+		
+		if (!isset($cached[$hash])) {
+			if ($cached[$hash] = Persistent::getData(__METHOD__.'.'.$hash))
+				return $cached[$hash];
+				
+			try {
+				$cached[$hash] = self::xml2array(self::runRequest("projects/{$project_id}.xml"), 'id');
+			}
+			catch(CHttpException $e) {
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			}
+			
+			Persistent::setData(__METHOD__.'.'.$hash, $cached[$hash], '+ 1 hour');
+		}
+		
+		return $cached[$hash];
 	}
 
+	
 	/**
-	 * Возвращает задачу с комментариями.
-	 *
-	 * @param int $IssueId
-	 * @return Object
+	 * обновить проект
+	 * @param string $project_id ID проекта
+	 * @param array $data параметы
+	 * @return array
 	 */
-	public static function getIssue($IssueId) {
-		return Redmine::runRequest('/issues/'.$IssueId.'.xml?include=journals', 'GET', '');
+	public static function updateProject($project_id, $data) {
+		try {
+			$xml = self::array2xml('project', $data);
+			return self::xml2array(self::runRequest("projects/{$project_id}.xml", $xml->asXML(), 'PUT'));
+		}
+		catch(CHttpException $e) {
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+		}
+	}
+	
+	/**
+	 * удалить проект
+	 * @param string $version_id ID проекта
+	 * @return array
+	 */
+	public static function deleteProject($project_id) {
+		try {
+			return self::xml2array(self::runRequest("projects/{$project_id}.xml", null, 'DELETE'));
+		}
+		catch(CHttpException $e) {
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+		}
 	}
 
+	
 	/**
-	 * Возвращает процент готовности задачи по ID.
-	 * @param int $IssueId
-	 * @return int
+	 * создать пользователя
+	 * @param array $data параметы
+	 * @return array
 	 */
-	public static function getIssuePercent($IssueId) {
-		return ( int ) Redmine::runRequest('/issues/'.$IssueId.'.xml', 'GET', '')->done_ratio;
+	public static function createUser($data) {
+		try {
+			$xml = self::array2xml('project', $data);
+			return self::xml2array(self::runRequest('users.xml', $xml->asXML(), 'POST'));
+		}
+		catch(CHttpException $e) {
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+		}
+	}
+	
+	/**
+	 * получить список пользователей
+	 * @param string $index [optional] по какому полю элемента проидексировать список
+	 * @return array
+	 */
+	public static function readUsers($index = 'id') {
+		static $cached;
+		
+		if (!isset($cached)) {
+			if ($cached = Persistent::getData(__METHOD__))
+				return $cached;
+				
+			try {
+				for ($cached = array(), $offset = 0, $limit = 50; count($data = self::xml2array(self::runRequest("users.xml?offset={$offset}&limit={$limit}"), $index)); $offset += $limit) {
+					$cached += $data;
+				}
+			}
+			catch(CHttpException $e) {
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			}
+			
+			Persistent::setData(__METHOD__, $cached, '+ 1 hour');
+		}
+		
+		return $cached;
+	}
+	
+	/**
+	 * получить пользователя
+	 * @param int $user_id ID пользователя
+	 * @return array
+	 */
+	public static function readUser($user_id) {
+		static $cached;
+		
+		$hash = md5($user_id);
+		
+		if (!isset($cached[$hash])) {
+			if ($cached[$hash] = Persistent::getData(__METHOD__.'.'.$hash))
+				return $cached[$hash];
+				
+			try {
+				$cached[$hash] = self::xml2array(self::runRequest("users/{$user_id}.xml?include=memberships"), 'id');
+			}
+			catch(CHttpException $e) {
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			}
+			
+			Persistent::setData(__METHOD__.'.'.$hash, $cached[$hash], '+ 1 hour');
+		}
+		
+		return $cached[$hash];
 	}
 
-
+	
 	/**
-	 *  Добавляем задачу.
-	 *
-	 * @param string $subject
-	 * @param text $description
-	 * @param int $assignmentUserId
-	 * @param int $parentIssueId
-	 * @param <type> $created_on
-	 * @param <type> $due_date
-	 * @return 
+	 * обновить пользователя
+	 * @param int $user_id ID пользователя
+	 * @param array $data параметы
+	 * @return array
 	 */
-	public static function addIssue($subject, $description, $assignmentUserId = 1, $parentIssueId = 0, $created_on = false, $due_date = false) {
-		$priority_id = 4;
- 
-		$xml = new SimpleXMLElement('<?xml version="1.0"?><issue></issue>');
-		$xml->addChild('subject', htmlspecialchars($subject));
-		$xml->addChild('project_id', Yii::app()->params['RedmineConfig']['targetProjectId']); // Берём проект из настроек
-		$xml->addChild('priority_id', $priority_id);
-		$xml->addChild('description', htmlspecialchars($description));
-//		$xml->addChild('category_id', $category_id);
-		if($parentIssueId) $xml->addChild('parent_issue_id', $parentIssueId);
-		if($created_on) $xml->addChild('start_date', $created_on);		
-		if($due_date) $xml->addChild('due_date', $due_date);
-		$xml->addChild('assigned_to_id', $assignmentUserId);
-
-		return Redmine::runRequest('/issues.xml', 'POST', $xml->asXML() );
+	public static function updateUser($user_id, $data) {
+		try {
+			$xml = self::array2xml('project', $data);
+			return self::xml2array(self::runRequest("users/{$user_id}.xml", $xml->asXML(), 'PUT'));
+		}
+		catch(CHttpException $e) {
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+		}
 	}
- 
+	
 	/**
-	 * Добавляем комментарий к задаче
-	 * 
-	 * @access public
-	 * @param mixed $issueId
-	 * @param mixed $note
-	 * @return void
+	 * удалить пльзователя
+	 * @param int $version_id ID пользователя
+	 * @return array
 	 */
-	public static function addNoteToIssue($issueId, $note) {
-		$xml = new SimpleXMLElement('<?xml version="1.0"?><issue></issue>');
-		$xml->addChild('id', $issueId);
-		$xml->addChild('notes', htmlspecialchars($note));
-		return Redmine::runRequest('/issues/'.$issueId.'.xml', 'PUT', $xml->asXML() );
+	public static function deleteUser($user_id) {
+		try {
+			return self::xml2array(self::runRequest("users/{$user_id}.xml", null, 'DELETE'));
+		}
+		catch(CHttpException $e) {
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+		}
 	}
- 
+
+	
+	/**
+	 * создать запись времени
+	 * @param array $data параметы
+	 * @return array
+	 */
+	public static function createTimeEntry($data) {
+		try {
+			$xml = self::array2xml('project', $data);
+			return self::xml2array(self::runRequest('time_entries.xml', $xml->asXML(), 'POST'));
+		}
+		catch(CHttpException $e) {
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+		}
+	}
+	
+	/**
+	 * обновить запись времени
+	 * @param int $time_entry_id ID записи времени
+	 * @param array $data параметы
+	 * @return array
+	 */
+	public static function updateTimeEntry($time_entry_id, $data) {
+		try {
+			$xml = self::array2xml('project', $data);
+			return self::xml2array(self::runRequest("time_entries/{$time_entry_id}.xml", $xml->asXML(), 'PUT'));
+		}
+		catch(CHttpException $e) {
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+		}
+	}
+	
+	/**
+	 * получить список записей времени
+	 * @param string $index [optional] по какому полю элемента проидексировать список
+	 * @return array
+	 */
+	public static function readTimeEntries($index = 'id') {
+		static $cached;
+		
+		if (!isset($cached)) {
+			if ($cached = Persistent::getData(__METHOD__))
+				return $cached;
+				
+			try {
+				$cached = self::xml2array(self::runRequest('time_entries.xml'), $index);
+			}
+			catch(CHttpException $e) {
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			}
+			
+			Persistent::setData(__METHOD__, $cached, '+ 1 hour');
+		}
+		
+		return $cached;
+	}
+	
+	/**
+	 * получить запись времени
+	 * @param int $time_entry_id ID записи времени
+	 * @return array
+	 */
+	public static function readTimeEntry($time_entry_id) {
+		static $cached;
+		
+		$hash = md5($time_entry_id);
+		
+		if (!isset($cached[$hash])) {
+			if ($cached[$hash] = Persistent::getData(__METHOD__.'.'.$hash))
+				return $cached[$hash];
+				
+			try {
+				$cached[$hash] = self::xml2array(self::runRequest("time_entries/{$time_entry_id}.xml?include=memberships"), 'id');
+			}
+			catch(CHttpException $e) {
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			}
+			
+			Persistent::setData(__METHOD__.'.'.$hash, $cached[$hash], '+ 1 hour');
+		}
+		
+		return $cached[$hash];
+	}
+	
+	/**
+	 * удалить запись времени
+	 * @param int $version_id ID связи времени
+	 * @return array
+	 */
+	public static function deleteTimeEntry($time_entry_id) {
+		try {
+			return self::xml2array(self::runRequest("time_entries/{$time_entry_id}.xml", null, 'DELETE'));
+		}
+		catch(CHttpException $e) {
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+		}
+	}
+	
+	/**
+	 * получить список новостей
+	 * @param string $index [optional] по какому полю элемента проидексировать список
+	 * @return array
+	 */
+	public static function readNews($index = 'id') {
+		static $cached;
+		
+		if (!isset($cached)) {
+			if ($cached = Persistent::getData(__METHOD__))
+				return $cached;
+				
+			//try {
+			for ($cached = array(), $offset = 0, $limit = 50; count($data = self::xml2array(self::runRequest("news.xml?offset={$offset}&limit={$limit}"), $index)); $offset += $limit) {
+				$cached += $data;
+			}
+			/*}
+			 catch(CHttpException $e) {
+			 throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			 }*/
+			
+			Persistent::setData(__METHOD__, $cached, '+ 1 hour');
+		}
+		
+		return $cached;
+	}
+
+	
+	/**
+	 * создать связь задач
+	 * @param int $issue_id ID задачи
+	 * @param array $data параметы
+	 * @return array
+	 */
+	public static function createIssueRelation($issue_id, $data) {
+		try {
+			$xml = self::array2xml('relation', $data);
+			return self::xml2array(self::runRequest("relation/{$issue_id}.xml", $xml->asXML(), 'POST'));
+		}
+		catch(CHttpException $e) {
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+		}
+	}
+	
+	/**
+	 * получить связанные задачи
+	 * @param int $issue_id ID задачи
+	 * @return array
+	 */
+	public static function readIssueRelations($issue_id) {
+		static $cached;
+		
+		$hash = md5($issue_id);
+		
+		if (!isset($cached[$hash])) {
+			if ($cached[$hash] = Persistent::getData(__METHOD__.'.'.$hash))
+				return $cached[$hash];
+				
+			try {
+				$cached[$hash] = self::xml2array(self::runRequest("issues/{$issue_id}/relations.xml"), 'id');
+			}
+			catch(CHttpException $e) {
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			}
+			
+			Persistent::setData(__METHOD__.'.'.$hash, $cached[$hash], '+1 hour');
+		}
+		
+		return $cached[$hash];
+	}
+
+	
+	/**
+	 * обновить связь задач
+	 * @param int $time_entry_id ID связи задач
+	 * @param array $data параметы
+	 * @return array
+	 */
+	public static function updateIssueRelation($issue_id, $data) {
+		try {
+			$xml = self::array2xml('relation', $data);
+			return self::xml2array(self::runRequest("relation/{$issue_id}.xml", $xml->asXML(), 'PUT'));
+		}
+		catch(CHttpException $e) {
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+		}
+	}
+	
+	/**
+	 * удалить связь задач
+	 * @param int $version_id ID связи задач
+	 * @return array
+	 */
+	public static function deleteIssueRelation($issue_id) {
+		try {
+			return self::xml2array(self::runRequest("relation/{$issue_id}.xml", null, 'DELETE'));
+		}
+		catch(CHttpException $e) {
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+		}
+	}
+
+	
+	/**
+	 * создать версию проекта
+	 * @param string $project_id ID проекта
+	 * @param array $data параметы
+	 * @return array
+	 */
+	public static function createProjectVersion($project_id, $data) {
+		try {
+			$xml = self::array2xml('version', $data);
+			return self::xml2array(self::runRequest("projects/{$project_id}/versions.xml", $xml->asXML(), 'POST'));
+		}
+		catch(CHttpException $e) {
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+		}
+	}
+	
+	/**
+	 * получить список версий проекта
+	 * @param string $project_id ID проекта
+	 * @return array
+	 */
+	public static function readProjectVersions($project_id) {
+		static $cached;
+		
+		$hash = md5($project_id);
+		
+		if (!isset($cached[$hash])) {
+			if ($cached[$hash] = Persistent::getData(__METHOD__.'.'.$hash))
+				return $cached[$hash];
+				
+			try {
+				$cached[$hash] = self::xml2array(self::runRequest("project/{$project_id}/versions.xml"), 'id');
+			}
+			catch(CHttpException $e) {
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			}
+			
+			Persistent::setData(__METHOD__.'.'.$hash, $cached[$hash], '+3 hour');
+		}
+		
+		return $cached[$hash];
+	}
+	
+	/**
+	 * получить версию
+	 * @param string $version_id ID версии
+	 * @return array
+	 */
+	public static function readVersion($version_id) {
+		static $cached;
+		
+		$hash = md5($version_id);
+		
+		if (!isset($cached[$hash])) {
+			if ($cached[$hash] = Persistent::getData(__METHOD__.'.'.$hash))
+				return $cached[$hash];
+				
+			try {
+				$cached[$hash] = self::xml2array(self::runRequest("versions/{$version_id}.xml"));
+			}
+			catch(CHttpException $e) {
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			}
+			
+			Persistent::setData(__METHOD__.'.'.$hash, $cached[$hash], '+3 hour');
+		}
+		
+		return $cached[$hash];
+	}
+
+	
+	/**
+	 * обновить версию
+	 * @param int $version_id ID версии
+	 * @param array $data параметы
+	 * @return array
+	 */
+	public static function updateVersion($version_id, $data) {
+		try {
+			$xml = self::array2xml('version', $data);
+			return self::xml2array(self::runRequest("versions/{$version_id}.xml", $xml->asXML(), 'PUT'));
+		}
+		catch(CHttpException $e) {
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+		}
+	}
+	
+	/**
+	 * удалить версию
+	 * @param int $version_id ID версии
+	 * @return array
+	 */
+	public static function deleteVersion($version_id) {
+		try {
+			return self::xml2array(self::runRequest("versions/{$version_id}.xml", null, 'DELETE'));
+		}
+		catch(CHttpException $e) {
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+		}
+	}
+	
+	/**
+	 * получить запросы
+	 * @param string $index [optional] по какому полю элемента проидексировать список
+	 * @return array
+	 */
+	public static function readQueries($index = 'id') {
+		static $cached;
+		
+		if (!isset($cached)) {
+			if ($cached = Persistent::getData(__METHOD__))
+				return $cached;
+				
+			try {
+				$cached = self::xml2array(self::runRequest("queries.xml"), $index);
+			}
+			catch(CHttpException $e) {
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			}
+			
+			Persistent::setData(__METHOD__, $cached);
+		}
+		
+		return $cached;
+	}
+	
+	/**
+	 * получить вложение
+	 * @param string $attacment_id ID вложения
+	 * @return array
+	 */
+	public static function readAttachment($attacment_id) {
+		static $cached;
+		
+		$hash = md5($attacment_id);
+		
+		if (!isset($cached[$hash])) {
+			if ($cached[$hash] = Persistent::getData(__METHOD__.'.'.$hash))
+				return $cached[$hash];
+				
+			try {
+				$cached[$hash] = self::xml2array(self::runRequest("attachments/{$attacment_id}.xml"), 'id');
+			}
+			catch(CHttpException $e) {
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			}
+			
+			Persistent::setData(__METHOD__.'.'.$hash, $cached[$hash]);
+		}
+		
+		return $cached[$hash];
+	}
 }
-?>
+
+/**
+ * прикладные (полезные) функции
+ */
+class Redmine extends RedmineModel {
+	/**
+	 * получить массив вида Array( [alaksey.d] => 50 [elena.c] => 39 [igor.p] => 5 ) соответствие Login-ID
+	 * Нужно переделать с учётом, что пользователей может быть более 100 (переделано!)
+	 * @return array
+	 */
+	public static function getUsersArray() {
+		try {
+			foreach (self::readUsers('login') as $login=>$data) {
+				$users[trim(strtolower($login))] = (int) @$data['id'];
+			}
+			return $users;
+		}
+		catch(Exception $e) {
+		}
+
+		
+	}
+	
+	/**
+	 * получить пользователя Redmine по его логину.
+	 * @param string $login
+	 * @return array
+	 */
+	public static function getUserByLogin($login) {
+		try {
+			$users = self::readUsers('login');
+			
+			foreach ($users as $key=>$data) {
+				if ($login == trim(strtolower($key)))
+					return $data;
+			}
+			
+			return $users;
+			
+		}
+		catch(Exception $e) {
+		}
+	}
+}

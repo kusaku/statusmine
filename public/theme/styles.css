@@ -50,6 +50,9 @@ table {
  */
 .round {
     -moz-border-radius: .3em;
+	-webkit-border-radius: .3em;
+	-o-border-radius: .3em;
+	-border-radius: .3em;
 }
 
 .inset {
@@ -168,7 +171,7 @@ table {
     white-space: nowrap;
 }
 
-.project {
+.element.project {
     margin: .5em 0 0 0;
 }
 

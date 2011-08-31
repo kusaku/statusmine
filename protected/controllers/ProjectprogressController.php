@@ -2,7 +2,7 @@
 /**
  *
  */
-class ProjectProgressController extends ElementController {
+class ProjectprogressController extends ElementController {
 	public function actionView($id = false) {
 		$data = array(
 			// процент

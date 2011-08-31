@@ -1,11 +1,9 @@
 <?php if (isset($header)): ?>
 <div class="header standalone">
-    <div class="projects">
-        <span class="text">Главные проекты</span>
+    <div class="subprojects">
+        <span class="text">Подпрокты проекта</span>
     </div>
-</div>	
-<?php elseif (isset($footer)): ?>
-<?php else: ?>
+</div>  
 <div class="header">
     <div class="projectname">
         <span class="text">Проект</span>
@@ -20,6 +18,8 @@
         <span class="text">Участники</span>
     </div>
 </div>
+<?php elseif (isset($footer)): ?>
+<?php else: ?>
 <?php unset($_SERVER['HTTP_X_REQUESTED_WITH']); ?>
 <?php foreach (array(5, 3, 1) as $_GET['id']): ?>
 <?php $this->forward('/project/render', false); ?>

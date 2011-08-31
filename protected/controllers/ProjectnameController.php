@@ -2,7 +2,7 @@
 /**
  *
  */
-class ProjectNameController extends ElementController {
+class ProjectnameController extends ElementController {
 	public function actionView($id = false) {
 		$data = array('name'=>md5(rand(0, 100)));
 		parent::actionView($data);

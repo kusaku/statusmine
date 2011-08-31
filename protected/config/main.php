@@ -48,14 +48,13 @@ return array(
 			'showScriptName'=>false,
 		),
 		
-		/*
 		'db'=>array(
 			'connectionString' => 'mysql:host=localhost;dbname=statusmine',
 			'emulatePrepare' => true,
 			'username' => 'root',
 			'password' => 'root',
 			'charset' => 'utf8',
-		),*/
+		),
 		
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors
@@ -84,15 +83,15 @@ return array(
 		// this is used in contact page
 		'adminEmail'=>'webmaster@example.com',
 
-		// Конфиг Редмайна. На продуктиве, естественно, свой.
-		'RedmineConfig'=>array(
-			'allow_connect' => true,
-			'protocol' => 'http',
-			'port' => '80',
-			'url' => "redmine.sandbox.loc",
-			'targetProjectId' => '1',
-			'rootLogin' => 'statusmine',
-			'rootPassword' => 'statusmine',
+		// конфиг редмайна. на продуктиве, естественно, свой.
+		'redmineConfig'=>array(
+			'enabled' => true,
+			//'proxy' => '172.16.0.1:3128',
+			'protocol' => 'https',
+			'port' => '443',
+			'url' => 'redmine.fabricasaitov.ru',
+			'rootLogin' => 'kirill.a',
+			'rootPassword' => 'eBr_iMQ9'
 		),
 	),
 );

@@ -2,7 +2,7 @@
 /**
  *
  */
-class ProjectUsersController extends ElementController {
+class ProjectusersController extends ElementController {
 	public function actionView($id = false) {
 		$count = rand(1, 4);
 		$we = array('konstantin.i@fabricasaitov.ru', 'dmitry.k@fabricasaitov.ru', 'kirill.a@fabricasaitov.ru');
