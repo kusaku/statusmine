@@ -1,3 +1,5 @@
 .project
 .buildpath
 .settings/
+protected/config/main.php
+protected/models/Redmine.php

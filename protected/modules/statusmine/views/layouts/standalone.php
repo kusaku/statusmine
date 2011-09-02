@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>running <?= CHtml::encode($this->getId()); ?> element</title>
+		<title><?= CHtml::encode($this->getPageTitle()); ?></title>
 		<style type="text/css">
 			@import url("/theme/styles.css") tv, screen;
 		</style>

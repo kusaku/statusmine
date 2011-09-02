@@ -21,11 +21,11 @@
 <?php elseif (isset($footer)): ?>
 <?php else: ?>
 <?php unset($_SERVER['HTTP_X_REQUESTED_WITH']); ?>
-<?php $this->forward('/projectname/render', false); ?>
-<?php $this->forward('/projectprogress/render', false); ?>
-<?php $this->forward('/projectdeadline/render', false); ?>
-<?php $this->forward('/projectusers/render', false); ?>
-<?php if (rand(0, 100) > 80): ?>
-<?php $this->forward('/subprojects/render', false); ?>
+<?php $this->forward('projectname/render', false); ?>
+<?php $this->forward('projectprogress/render', false); ?>
+<?php $this->forward('projectdeadline/render', false); ?>
+<?php $this->forward('projectusers/render', false); ?>
+<?php if (isset($data['childs'])): ?>
+<?php $this->forward('subprojects/render', false); ?>
 <?php endif; ?>
 <?php endif; ?>

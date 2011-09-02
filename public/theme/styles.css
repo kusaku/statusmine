@@ -171,6 +171,18 @@ table {
     white-space: nowrap;
 }
 
+.projects {
+    
+}
+
+.subprojects {
+    margin-top: .5em;
+}
+
+.subprojects * {
+    line-height: 120% !important;
+}
+
 .element.project {
     margin: .5em 0 0 0;
 }
@@ -281,11 +293,13 @@ table {
     opacity: .9;
 }
 
-.messages {	
-    height: 50%;
-	overflow: hidden;
+.element.messages {	
     position: absolute;
     bottom: 0;
+}
+
+.standalone.messages { 
+    position: relative;
 }
 
 .messages .inset {
@@ -293,7 +307,7 @@ table {
     opacity: .5;
 }
 
-.message {	
+.element.message {	
 	margin: .5em;
 }
 

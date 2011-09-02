@@ -108,17 +108,18 @@ class RedmineConnector {
 			curl_setopt($curl, CURLOPT_PORT, $config['port']);
 			
 			if (stristr('users.xml', $function))
+				// от суперадмина
+				curl_setopt($curl, CURLOPT_USERPWD, "{$config['rootLogin']}:{$config['rootPassword']}");
+			else				
+				curl_setopt($curl, CURLOPT_USERPWD, "{$config['rootLogin']}:{$config['rootPassword']}");
 				// от имени текущего пользователя
-				curl_setopt($curl, CURLOPT_USERPWD, "{$config['rootLogin']}:{$config['rootPassword']}");
-			else
-				// от имени Димы Кривчикова
-				curl_setopt($curl, CURLOPT_USERPWD, "{$config['rootLogin']}:{$config['rootPassword']}");
+				//curl_setopt($curl, CURLOPT_USERPWD, Yii::app()->user->login.':'.base64_decode(Yii::app()->user->key));
 				
 			// пробуем все типы авторизации
 			curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
 			
 			// если мы сидим за проксей
-			if (2 == count(@list($proxy, $port) = explode(':', @$config['proxy']))) {
+			if (2 == count(@list($proxy,$port) = explode(':', @$config['proxy']))) {
 				curl_setopt($curl, CURLOPT_PROXY, $proxy);
 				curl_setopt($curl, CURLOPT_PROXYPORT, $port);
 				//curl_setopt($curl, CURLOPT_PROXYAUTH,  CURLAUTH_BASIC | CURLAUTH_NTLM);
@@ -144,7 +145,9 @@ class RedmineConnector {
 			// 10 метров буфера, должно хватить
 			curl_setopt($curl, CURLOPT_BUFFERSIZE, 1024 * 1024 * 10); // max 10 mb!
 			// кодировка UTF-8 и длина сообщения
-			curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: text/xml; charset=UTF-8', 'Content-Length: '.strlen($data)));
+			curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+				'Content-Type: text/xml; charset=UTF-8','Content-Length: '.strlen($data)
+			));
 
 			
 			// делаем запрос
@@ -156,19 +159,27 @@ class RedmineConnector {
 			// проверяем успешность
 			switch ($method) {
 				case 'POST':
-					if (!in_array($http_code, array(201, 422)))
+					if (!in_array($http_code, array(
+						201,422
+					)))
 						throw new CHttpException(500, 'cURL request failed: '.self::getCurlInfo($curl));
 					break;
 				case 'PUT':
-					if (!in_array($http_code, array(200, 422)))
+					if (!in_array($http_code, array(
+						200,422
+					)))
 						throw new CHttpException(500, 'cURL request failed: '.self::getCurlInfo($curl));
 					break;
 				case 'DELETE':
-					if (!in_array($http_code, array(200, 422)))
+					if (!in_array($http_code, array(
+						200,422
+					)))
 						throw new CHttpException(500, 'cURL request failed: '.self::getCurlInfo($curl));
 					break;
 				case 'GET':
-					if (!in_array($http_code, array(200, 422)))
+					if (!in_array($http_code, array(
+						200,422
+					)))
 						throw new CHttpException(500, 'cURL request failed: '.self::getCurlInfo($curl));
 				default:
 					break;
@@ -201,7 +212,8 @@ class RedmineConnector {
 	 */
 	protected static function xml2array($xml, $index = false, $withAttributes = false) {
 	
-		$array = array();
+		$array = array(
+		);
 		
 		foreach ($xml->children() as $child=>$node) {
 			// если у элемента несколько одинаковых детей, дети индексируются
@@ -251,7 +263,8 @@ class RedmineConnector {
 	 */
 	protected static function array2xml($base, $children = null, &$xml = null) {
 	
-		$children or $children = array();
+		$children or $children = array(
+		);
 		$xml or $xml = new SimpleXMLElement("<?xml version='1.0' encoding='UTF-8'?><{$base}/>");
 		
 		foreach ($children as $key=>$value) {
@@ -302,13 +315,13 @@ class RedmineModel extends RedmineConnector {
 	public static function readIssues($index = 'id', $project_id = false, $tracker_id = false, $status_id = false, $assigned_to_id = false) {
 		static $cached;
 		
-		$queryAdd = '';
-		$project_id and $queryAdd .= "&project_id={$project_id}";
-		$tracker_id and $queryAdd .= "&tracker_id={$tracker_id}";
-		$status_id and $queryAdd .= "&status_id={$status_id}";
-		$assigned_to_id and $queryAdd .= "&assigned_to_id={$assigned_to_id}";
+		$query = '';
+		$project_id and $query .= "&project_id={$project_id}";
+		$tracker_id and $query .= "&tracker_id={$tracker_id}";
+		$status_id and $query .= "&status_id={$status_id}";
+		$assigned_to_id and $query .= "&assigned_to_id={$assigned_to_id}";
 		
-		$hash = md5($queryAdd);
+		$hash = md5($index.$query);
 		
 		if (!isset($cached[$hash])) {
 			if ($cached[$hash] = Persistent::getData(__METHOD__.'.'.$hash))
@@ -323,7 +336,8 @@ class RedmineModel extends RedmineConnector {
 			}
 			
 			try {
-				for ($cached[$hash] = array(), $offset = 0, $limit = 50; count($data = self::xml2array(self::runRequest("issues.xml?offset={$offset}&limit={$limit}{$queryAdd}"), $index)); $offset += $limit) {
+				for ($cached[$hash] = array(
+				), $offset = 0, $limit = 50; count($data = self::xml2array(self::runRequest("issues.xml?offset={$offset}&limit={$limit}{$query}"), $index)); $offset += $limit) {
 					$cached[$hash] += $data;
 				}
 			}
@@ -332,8 +346,8 @@ class RedmineModel extends RedmineConnector {
 			}
 			
 			// много данных не влезет, разобъем по 100
-			if (($count = count($cached[$hash])) > 100) {
-				for ($index = 0, $offset = 0, $limit = 100; $offset < $count; $index++, $offset += $limit) {
+			if (($count = count($cached[$hash])) > 500) {
+				for ($index = 0, $offset = 0, $limit = 500; $offset < $count; $index++, $offset += $limit) {
 					$partial = array_slice($cached[$hash], $offset, $limit, true);
 					// а еще - увеличим время хранения - процедура получения слишком дорого обходится
 					Persistent::setData(__METHOD__.'.'.$hash.'.'.$index, $partial, '+10 minutes');
@@ -364,7 +378,7 @@ class RedmineModel extends RedmineConnector {
 				$cached[$hash] = self::xml2array(self::runRequest("issues/{$issue_id}.xml?include=relations,journals"), 'id');
 			}
 			catch(CHttpException $e) {
-				Yii::trace('Redmine request failed', __METHOD__);
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
 			}
 			
 			Persistent::setData(__METHOD__.'.'.$hash, $cached[$hash]);
@@ -428,23 +442,26 @@ class RedmineModel extends RedmineConnector {
 	public static function readProjects($index = 'id') {
 		static $cached;
 		
-		if (!isset($cached)) {
-			if ($cached = Persistent::getData(__METHOD__))
-				return $cached;
+		$hash = md5($index);
+		
+		if (!isset($cached[$hash])) {
+			if ($cached[$hash] = Persistent::getData(__METHOD__.'.'.$hash))
+				return $cached[$hash];
 				
 			try {
-				for ($cached = array(), $offset = 0, $limit = 50; count($data = self::xml2array(self::runRequest("projects.xml?offset={$offset}&limit={$limit}"), $index)); $offset += $limit) {
-					$cached += $data;
+				for ($cached[$hash] = array(
+				), $offset = 0, $limit = 50; count($data = self::xml2array(self::runRequest("projects.xml?offset={$offset}&limit={$limit}"), $index)); $offset += $limit) {
+					$cached[$hash] += $data;
 				}
 			}
 			catch(CHttpException $e) {
 				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
 			}
 			
-			Persistent::setData(__METHOD__, $cached, '+ 1 hour');
+			Persistent::setData(__METHOD__.'.'.$hash, $cached[$hash], '+1 day');
 		}
 		
-		return $cached;
+		return $cached[$hash];
 	}
 	
 	/**
@@ -529,23 +546,26 @@ class RedmineModel extends RedmineConnector {
 	public static function readUsers($index = 'id') {
 		static $cached;
 		
-		if (!isset($cached)) {
-			if ($cached = Persistent::getData(__METHOD__))
-				return $cached;
+		$hash = md5($index);
+		
+		if (!isset($cached[$hash])) {
+			if ($cached[$hash] = Persistent::getData(__METHOD__.'.'.$hash))
+				return $cached[$hash];
 				
 			try {
-				for ($cached = array(), $offset = 0, $limit = 50; count($data = self::xml2array(self::runRequest("users.xml?offset={$offset}&limit={$limit}"), $index)); $offset += $limit) {
-					$cached += $data;
+				for ($cached[$hash] = array(
+				), $offset = 0, $limit = 50; count($data = self::xml2array($u = self::runRequest("users.xml?offset={$offset}&limit={$limit}"), $index)); $offset += $limit) {
+					$cached[$hash] += $data;
 				}
 			}
 			catch(CHttpException $e) {
 				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
 			}
 			
-			Persistent::setData(__METHOD__, $cached, '+ 1 hour');
+			Persistent::setData(__METHOD__.'.'.$hash, $cached[$hash], '+3 hour');
 		}
 		
-		return $cached;
+		return $cached[$hash];
 	}
 	
 	/**
@@ -646,21 +666,23 @@ class RedmineModel extends RedmineConnector {
 	public static function readTimeEntries($index = 'id') {
 		static $cached;
 		
-		if (!isset($cached)) {
-			if ($cached = Persistent::getData(__METHOD__))
-				return $cached;
+		$hash = md5($index);
+		
+		if (!isset($cached[$hash])) {
+			if ($cached[$hash] = Persistent::getData(__METHOD__.'.'.$hash))
+				return $cached[$hash];
 				
 			try {
-				$cached = self::xml2array(self::runRequest('time_entries.xml'), $index);
+				$cached[$hash] = self::xml2array(self::runRequest('time_entries.xml'), $index);
 			}
 			catch(CHttpException $e) {
 				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
 			}
 			
-			Persistent::setData(__METHOD__, $cached, '+ 1 hour');
+			Persistent::setData(__METHOD__.'.'.$hash, $cached[$hash], '+1 hour');
 		}
 		
-		return $cached;
+		return $cached[$hash];
 	}
 	
 	/**
@@ -710,25 +732,29 @@ class RedmineModel extends RedmineConnector {
 	 * @return array
 	 */
 	public static function readNews($index = 'id') {
+	
 		static $cached;
 		
-		if (!isset($cached)) {
-			if ($cached = Persistent::getData(__METHOD__))
-				return $cached;
+		$hash = md5($index);
+		
+		if (!isset($cached[$hash])) {
+			if ($cached[$hash] = Persistent::getData(__METHOD__.'.'.$hash))
+				return $cached[$hash];
 				
-			//try {
-			for ($cached = array(), $offset = 0, $limit = 50; count($data = self::xml2array(self::runRequest("news.xml?offset={$offset}&limit={$limit}"), $index)); $offset += $limit) {
-				$cached += $data;
+			try {
+				for ($cached[$hash] = array(
+				), $offset = 0, $limit = 50; count($data = self::xml2array(self::runRequest("news.xml?offset={$offset}&limit={$limit}"), $index)); $offset += $limit) {
+					$cached[$hash] += $data;
+				}
 			}
-			/*}
-			 catch(CHttpException $e) {
-			 throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
-			 }*/
+			catch(CHttpException $e) {
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			}
 			
-			Persistent::setData(__METHOD__, $cached, '+ 1 hour');
+			Persistent::setData(__METHOD__.'.'.$hash, $cached[$hash], '+1 day');
 		}
 		
-		return $cached;
+		return $cached[$hash];
 	}
 
 	
@@ -916,21 +942,23 @@ class RedmineModel extends RedmineConnector {
 	public static function readQueries($index = 'id') {
 		static $cached;
 		
-		if (!isset($cached)) {
-			if ($cached = Persistent::getData(__METHOD__))
-				return $cached;
+		$hash = md5($index);
+		
+		if (!isset($cached[$hash])) {
+			if ($cached[$hash] = Persistent::getData(__METHOD__.'.'.$hash))
+				return $cached[$hash];
 				
 			try {
-				$cached = self::xml2array(self::runRequest("queries.xml"), $index);
+				$cached[$hash] = self::xml2array(self::runRequest("queries.xml"), $index);
 			}
 			catch(CHttpException $e) {
 				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
 			}
 			
-			Persistent::setData(__METHOD__, $cached);
+			Persistent::setData(__METHOD__.'.'.$hash, $cached[$hash]);
 		}
 		
-		return $cached;
+		return $cached[$hash];
 	}
 	
 	/**
@@ -978,9 +1006,9 @@ class Redmine extends RedmineModel {
 			return $users;
 		}
 		catch(Exception $e) {
+			return array(
+			);
 		}
-
-		
 	}
 	
 	/**
@@ -996,11 +1024,50 @@ class Redmine extends RedmineModel {
 				if ($login == trim(strtolower($key)))
 					return $data;
 			}
-			
-			return $users;
-			
+			return array(
+			);
 		}
 		catch(Exception $e) {
+			return array(
+			);
+		}
+	}
+	
+	/**
+	 * получить проект Redmine по его идентификатору
+	 * @param string $login
+	 * @return array
+	 */
+	public static function getProjectByIdentifier($identifier) {
+		try {
+			$projects = self::readProjects('identifier');
+			
+			foreach ($projects as $key=>$data) {
+				if ($identifier == trim(strtolower($key)))
+					return $data;
+			}
+			return array(
+			);
+		}
+		catch(Exception $e) {
+			return array(
+			);
+		}
+	}	
+	
+	/**
+	 * получить процент готовности задачи
+	 * @param string $issue_id ID задачи
+	 * @return int
+	 */
+	public static function getIssuePercent($issue_id) {
+		try {
+			$issue = self::readIssue($issue_id);
+			
+			return (int) @$issue['done_ratio'];
+		}
+		catch(Exception $e) {
+			return 0;
 		}
 	}
 }

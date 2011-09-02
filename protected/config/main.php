@@ -18,17 +18,31 @@ return array(
 		'application.components.*',
 	),
 
-	'modules'=>array(
+	'modules'=>array('statusmine',
 		// uncomment the following to enable the Gii tool
-		/*
-		'gii'=>array(
-			'class'=>'system.gii.GiiModule',
-			'password'=>'Enter Your Password Here',
-		 	// If removed, Gii defaults to localhost only. Edit carefully to taste.
-			'ipFilters'=>array('127.0.0.1','::1'),
-		),
-		*/
+//		'gii'=>array(
+//			'class'=>'system.gii.GiiModule',
+//			'username'=>'dev',
+//			'password'=>'yiidev',
+//		),
 	),
+	
+	'defaultController' => 'statusmine',
+	
+    // application-level parameters that can be accessed
+    // using Yii::app()->params['paramName']
+    'params'=>array(
+        // конфиг редмайна. на продуктиве, естественно, свой.
+        'redmineConfig'=>array(
+            'enabled' => true,
+            //'proxy' => '192.168.0.254:3128',
+            'protocol' => 'https',
+            'port' => '443',
+            'url' => 'redmine.fabricasaitov.ru',
+            'rootLogin' => 'sup',
+            'rootPassword' => 'zVRaDio(5mWEdFW'
+        ),  
+    ),	
 
 	// application components
 	'components'=>array(
@@ -74,24 +88,6 @@ return array(
 				),
 				*/
 			),
-		),
-	),
-
-	// application-level parameters that can be accessed
-	// using Yii::app()->params['paramName']
-	'params'=>array(
-		// this is used in contact page
-		'adminEmail'=>'webmaster@example.com',
-
-		// конфиг редмайна. на продуктиве, естественно, свой.
-		'redmineConfig'=>array(
-			'enabled' => true,
-			//'proxy' => '172.16.0.1:3128',
-			'protocol' => 'https',
-			'port' => '443',
-			'url' => 'redmine.fabricasaitov.ru',
-			'rootLogin' => 'kirill.a',
-			'rootPassword' => 'eBr_iMQ9'
 		),
 	),
 );

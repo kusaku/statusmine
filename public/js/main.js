@@ -156,8 +156,8 @@ $(function(){
 		var diffDate = 0;
 		
 		$(this).autoUpdate({
-			interval: 1000,
-			waitOthers: true,
+			interval: 60000,
+			waitOthers: false,
 			action: function(dfd){
 				var elem = this;
 				jQuery.post(this.attr('href'), function(json){
