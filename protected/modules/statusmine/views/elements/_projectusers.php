@@ -8,7 +8,7 @@
 <?php else: ?>
 <?php foreach ($data as $user): ?>
 <div class="gravatar">
-	<div class="outershadow full"></div>
+	<div class="outershadow"></div>
 	<img src="https://secure.gravatar.com/avatar/<?= (string)@$user['gravatar']; ?>"/>
 </div>
 <?php endforeach; ?>

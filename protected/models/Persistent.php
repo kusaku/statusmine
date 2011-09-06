@@ -39,7 +39,6 @@ class Persistent extends CActiveRecord {
 	public $data = '87MGAA==';
 	
 	public static function model($className = __CLASS__) {
-	
 		return parent::model($className);
 	}
 	
@@ -47,6 +46,7 @@ class Persistent extends CActiveRecord {
 		return 'persistent';
 	}
 	
+	// удаление просроченных данных
 	public function init() {
 		self::model()->deleteAll('expires < NOW()');
 	}
@@ -111,7 +111,7 @@ class Persistent extends CActiveRecord {
 		self::$_loaded[$name]->name = $name;
 		self::$_loaded[$name]->data = base64_encode(gzdeflate(serialize($data), 9));
 		self::$_loaded[$name]->expires = date('Y-m-d H:i:s', strtotime($expires));
-		self::$_loaded[$name]->data == '87MGAA==' ? self::$_loaded[$name]->getIsNewRecord() or self::$_loaded[$name]->delete() : self::$_loaded[$name]->save();
+		self::$_loaded[$name]->data == '87MGAA==' ? self::$_loaded[$name]->delete() : self::$_loaded[$name]->save();
 	}
 }
 
@@ -124,7 +124,7 @@ class Persistent extends CActiveRecord {
  *
  * ObjectQueue:enQueue($object);
  * ...
- * $object = ObjectQueue:enQueue()
+ * $object = ObjectQueue:deQueue()
  *
  * чтобы создать новый тип очереди, надо
  * расширить класс ObjectQueue и использовать его:

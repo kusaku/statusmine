@@ -24,7 +24,10 @@ html, body {
      min-width: 800px;
      */
     color: #818181;
-    background-color: #0e0e0e;
+    /*
+     background-color: #0e0e0e;
+     */
+    background-color: #000000;
 }
 
 ol, ul {
@@ -50,14 +53,16 @@ table {
  */
 .round {
     -moz-border-radius: .3em;
-	-webkit-border-radius: .3em;
-	-o-border-radius: .3em;
-	-border-radius: .3em;
+    -webkit-border-radius: .3em;
+    -o-border-radius: .3em;
+    -border-radius: .3em;
 }
 
 .inset {
     position: absolute;
     top: 0px;
+    right: 0px;
+    bottom: 0px;
     left: 0px;
     -moz-border-image: url("img/inset_round.png") 30 30 stretch; /* Firefox */
     -webkit-border-image: url("img/inset_round.png") 30 30 stretch; /* Safari and Chrome */
@@ -68,6 +73,8 @@ table {
 .outset {
     position: absolute;
     top: 0px;
+    right: 0px;
+    bottom: 0px;
     left: 0px;
     -moz-border-image: url("img/outset_round.png") 30 30 stretch; /* Firefox */
     -webkit-border-image: url("img/outset_round.png") 30 30 stretch; /* Safari and Chrome */
@@ -78,6 +85,8 @@ table {
 .outerglow {
     position: absolute;
     top: 0px;
+    right: 0px;
+    bottom: 0px;
     left: 0px;
     -moz-border-image: url("img/outer_glow.png") 30 30 stretch; /* Firefox */
     -webkit-border-image: url("img/outer_glow.png") 30 30 stretch; /* Safari and Chrome */
@@ -88,6 +97,8 @@ table {
 .outerglow.round {
     position: absolute;
     top: 0px;
+    right: 0px;
+    bottom: 0px;
     left: 0px;
     -moz-border-image: url("img/outer_glow_round.png") 60 60 stretch; /* Firefox */
     -webkit-border-image: url("img/outer_glow_round.png") 30 30 stretch; /* Safari and Chrome */
@@ -98,6 +109,8 @@ table {
 .innershadow {
     position: absolute;
     top: 0px;
+    right: 0px;
+    bottom: 0px;
     left: 0px;
     -moz-border-image: url("img/inner_shadow.png") 30 30 repeat; /* Firefox */
     -webkit-border-image: url("img/inner_shadow.png") 30 30 repeat; /* Safari and Chrome */
@@ -108,6 +121,8 @@ table {
 .innershadow.round {
     position: absolute;
     top: 0px;
+    right: 0px;
+    bottom: 0px;
     left: 0px;
     -moz-border-image: url("img/inner_shadow_round.png") 30 30 repeat; /* Firefox */
     -webkit-border-image: url("img/inner_shadow_round.png") 30 30 repeat; /* Safari and Chrome */
@@ -118,6 +133,8 @@ table {
 .outershadow {
     position: absolute;
     top: 0px;
+    right: 0px;
+    bottom: 0px;
     left: 0px;
     -moz-border-image: url("img/outer_shadow.png") 30 30 repeat; /* Firefox */
     -webkit-border-image: url("img/outer_shadow.png") 30 30 repeat; /* Safari and Chrome */
@@ -130,143 +147,193 @@ table {
  */
 .outer {
     position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
     background-color: #2f2f2f;
     margin: 1.5em;
     padding: .7em;
 }
 
 .left {
-    background-color: #383838;
     float: left;
     width: 70%;
-    overflow: hidden;
+    height: 100%;
 }
 
 .right {
     float: right;
     width: 30%;
+    height: 100%;
 }
 
-.right .layout {
-    margin-left: .7em;
+.content {
+    height: 100%;
+}
+
+.left .content {
+    margin-right: .35em;
+    overflow: auto;
+    background-color: #383838;
+}
+
+.right .content {
+    margin-left: .35em;
+    overflow: auto;
 }
 
 /**
- * elements style begin below
+ * elements styles begin below
  */
+.element {
+    -moz-border-radius: .3em;
+    -webkit-border-radius: .3em;
+    -o-border-radius: .3em;
+    -border-radius: .3em;
+}
+
 .header {
     border-bottom: .1em solid #818181;
 }
 
-.header.standalone {
-    border-bottom: none;
+.footer {
+    border-top: .1em solid #818181;
 }
 
-.header .text {
-    line-height: 200%;
-    font-size: 75%;
-    font-weight: bold;
-    text-align: right;
-    text-shadow: 0 0 .5em #000000;
-    white-space: nowrap;
-}
-
-.projects {
-    
-}
-
-.subprojects {
-    margin-top: .5em;
-}
-
-.subprojects * {
-    line-height: 120% !important;
-}
-
-.element.project {
-    margin: .5em 0 0 0;
-}
-
-.element.projectname .text, .element.projectprogress .text, .element.projectdeadline .text, .element.projectusers .text {
+.element .text {
     padding: 0 .7em;
     color: #ffffff;
     line-height: 200%;
     font-size: 75%;
     font-weight: bold;
-    text-align: right;
     text-shadow: 0 0 .5em #000000;
     text-transform: uppercase;
     white-space: nowrap;
 }
 
-.projectname {
+.header .text, .footer .text {
+    padding: 0 .5em;
+    color: #818181;
+    line-height: 200%;
+    font-size: 75%;
+    font-weight: bold;
+    text-shadow: 0 0 .5em #000000;
+    text-transform: none;
+    white-space: nowrap;;
+}
+
+.element .inset {
+    border: .3em;
+    opacity: .5;
+}
+
+.element .outset {
+    border: .3em;
+    opacity: .5;
+}
+
+.element .innershadow {
+    border: 2em;
+    opacity: .9;
+}
+
+.element.layout {
+    widows: 100%;
+	height: 100%;
+}
+
+.element.layout .preloader {
     display: inline-block;
+}
+
+.element.error {
+    margin: .25em 0;
+}
+
+.element.projects {
+}
+
+.element.subprojects {
+}
+
+.element.subprojects .text {
+    line-height: 140%;
+}
+
+.element.project {
+    margin: .25em 0;
+}
+
+.projects .name, .projects .description, .projects .update, .projects .issuescount {
+    display: inline-block;
+    margin: 0 0 0 .5em;
+    overflow: hidden;
+}
+
+.project .name, .project .description, .project .update, .project .issuescount {
+    display: inline-block;
+    margin: 0 0 0 .5em;
+    overflow: hidden;
+}
+
+.project .name {
     width: 9em;
-    margin: 0 0 0 .5em;
-    overflow: hidden;
+    text-align: left;
 }
 
-.projectname .inset {
-    border: .3em;
-    opacity: .5;
+.project .description {
+    width: 20em;
+    text-align: left;
 }
 
-.projectprogress {
+.project .update {
+    width: 5em;
+    text-align: center;
+}
+
+.project .issuescount {
+    width: 3em;
+    text-align: center;
+}
+
+.element.issue {
+    margin: .25em 0;
+}
+
+.issue .subject, .issue .status, .issue .progress, .issue .deadline {
     display: inline-block;
-    width: 15em;
     margin: 0 0 0 .5em;
     overflow: hidden;
 }
 
-.projectprogress .inset {
-    border: .3em;
-    opacity: .5;
+.issue .subject {
+    width: 9em;
+    text-align: left;
 }
 
-.projectprogress .outset {
-    border: .3em;
-    opacity: .5;
+.issue .status {
+    width: 5em;
+    text-align: center;
 }
 
-.projectprogress .bar {
+.issue .progress {
+    width: 18em;
+    text-align: left;
+}
+
+.issue .progress .bar {
     min-width: 1em;
     text-align: right;
 }
 
-.projectdeadline {
-    display: inline-block;
+.issue .deadline {
     width: 5em;
-    margin: 0 0 0 .5em;
-    text-align: center;
-    overflow: hidden;
-}
-
-.projectdeadline .inset {
-    border: .3em;
-    opacity: .5;
-}
-
-.projectusers {
-    display: inline-block;
-    width: 9em;
-    margin: 0 0 0 .5em;
     text-align: center;
 }
 
-.projectusers .gravatar {
-    display: inline-block;
-    margin: 0 .2em .2em;
-}
-
-.projectusers img {
-    height: 1.5em;
-    width: 1.5em;
-}
-
-.projectusers .outershadow {
-    border: .5em;
-    margin: -.4em -.6em -.6em -.4em;
-    opacity: .5;
+.element.project .element.issue .text {
+    line-height: 150%;
 }
 
 .element.calendar {
@@ -278,42 +345,30 @@ table {
     margin: 0 0 .7em;
 }
 
-.calendar .time {
+.element.calendar .time {
     margin: -0.1em -50% -0.15em;
     font-size: 700%;
 }
 
-.calendar .date {
+.element.calendar .date {
     margin: -0.15em -50% -0.1em;
     font-size: 200%;
 }
 
-.calendar .innershadow {
-    border: 2em;
-    opacity: .9;
-}
-
-.element.messages {	
+.element.messages {
     position: absolute;
     bottom: 0;
 }
 
-.standalone.messages { 
+.standalone.element.messages {
     position: relative;
 }
 
-.messages .inset {
-    border: .3em;
-    opacity: .5;
+.element.message {
+    margin: .5em;
 }
 
-.element.message {	
-	margin: .5em;
-}
-
-.message .text {
-    color: #ffffff;
-    line-height: 200%;
+.element.message .text {
     font-size: 50%;
-    text-align: right;
+    white-space: normal;
 }

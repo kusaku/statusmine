@@ -1,11 +1,25 @@
 <?php if (isset($header)): ?>
-<?php elseif (isset($footer)): ?>
-<?php else: ?>
-<div class="header standalone">
-    <div class="subprojects">
-        <span class="text">Подпрокты</span>
+<div class="header standalone <?= $this->getId(); ?>">
+    <div class="projects">
+        <span class="text">Подпрокты <?= $data['project_name']; ?></span>
     </div>
-</div>  
+</div>
+<?php elseif (isset($footer)): ?>
+<?php else : ?>
+<div class="header standalone project">
+    <div class="name">
+        <span class="text">Название</span>
+    </div>
+    <div class="description">
+        <span class="text">Описание</span>
+    </div>
+    <div class="issuescount">
+        <span class="text">Задач</span>
+    </div>	
+    <div class="update">
+        <span class="text">Обновлен</span>
+    </div>
+</div>
 <?php unset($_SERVER['HTTP_X_REQUESTED_WITH']); ?>
 <?php foreach ($data['childs'] as $_GET['id']): ?>
 <?php $this->forward('project/render', false); ?>

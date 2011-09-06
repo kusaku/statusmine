@@ -110,16 +110,16 @@ class RedmineConnector {
 			if (stristr('users.xml', $function))
 				// от суперадмина
 				curl_setopt($curl, CURLOPT_USERPWD, "{$config['rootLogin']}:{$config['rootPassword']}");
-			else				
+			else
 				curl_setopt($curl, CURLOPT_USERPWD, "{$config['rootLogin']}:{$config['rootPassword']}");
-				// от имени текущего пользователя
-				//curl_setopt($curl, CURLOPT_USERPWD, Yii::app()->user->login.':'.base64_decode(Yii::app()->user->key));
-				
+			// от имени текущего пользователя
+			//curl_setopt($curl, CURLOPT_USERPWD, Yii::app()->user->login.':'.base64_decode(Yii::app()->user->key));
+			
 			// пробуем все типы авторизации
 			curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
 			
 			// если мы сидим за проксей
-			if (2 == count(@list($proxy,$port) = explode(':', @$config['proxy']))) {
+			if (2 == count(@list($proxy, $port) = explode(':', @$config['proxy']))) {
 				curl_setopt($curl, CURLOPT_PROXY, $proxy);
 				curl_setopt($curl, CURLOPT_PROXYPORT, $port);
 				//curl_setopt($curl, CURLOPT_PROXYAUTH,  CURLAUTH_BASIC | CURLAUTH_NTLM);
@@ -145,9 +145,7 @@ class RedmineConnector {
 			// 10 метров буфера, должно хватить
 			curl_setopt($curl, CURLOPT_BUFFERSIZE, 1024 * 1024 * 10); // max 10 mb!
 			// кодировка UTF-8 и длина сообщения
-			curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-				'Content-Type: text/xml; charset=UTF-8','Content-Length: '.strlen($data)
-			));
+			curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: text/xml; charset=UTF-8', 'Content-Length: '.strlen($data)));
 
 			
 			// делаем запрос
@@ -159,27 +157,19 @@ class RedmineConnector {
 			// проверяем успешность
 			switch ($method) {
 				case 'POST':
-					if (!in_array($http_code, array(
-						201,422
-					)))
+					if (!in_array($http_code, array(201, 422)))
 						throw new CHttpException(500, 'cURL request failed: '.self::getCurlInfo($curl));
 					break;
 				case 'PUT':
-					if (!in_array($http_code, array(
-						200,422
-					)))
+					if (!in_array($http_code, array(200, 422)))
 						throw new CHttpException(500, 'cURL request failed: '.self::getCurlInfo($curl));
 					break;
 				case 'DELETE':
-					if (!in_array($http_code, array(
-						200,422
-					)))
+					if (!in_array($http_code, array(200, 422)))
 						throw new CHttpException(500, 'cURL request failed: '.self::getCurlInfo($curl));
 					break;
 				case 'GET':
-					if (!in_array($http_code, array(
-						200,422
-					)))
+					if (!in_array($http_code, array(200, 422)))
 						throw new CHttpException(500, 'cURL request failed: '.self::getCurlInfo($curl));
 				default:
 					break;
@@ -212,8 +202,7 @@ class RedmineConnector {
 	 */
 	protected static function xml2array($xml, $index = false, $withAttributes = false) {
 	
-		$array = array(
-		);
+		$array = array();
 		
 		foreach ($xml->children() as $child=>$node) {
 			// если у элемента несколько одинаковых детей, дети индексируются
@@ -232,7 +221,6 @@ class RedmineConnector {
 					echo (string) $node->$index;
 					$array[] = self::xml2array($node, $index, true);
 				}
-				
 			}
 			// если же у ребенка тоже есть несколько детей или атрибутов, идем вглубь
 			elseif (count($node->children()) + count($node->attributes()) > 1) {
@@ -263,8 +251,7 @@ class RedmineConnector {
 	 */
 	protected static function array2xml($base, $children = null, &$xml = null) {
 	
-		$children or $children = array(
-		);
+		$children or $children = array();
 		$xml or $xml = new SimpleXMLElement("<?xml version='1.0' encoding='UTF-8'?><{$base}/>");
 		
 		foreach ($children as $key=>$value) {
@@ -306,22 +293,28 @@ class RedmineModel extends RedmineConnector {
 	/**
 	 * получить список задач
 	 * @param string $index [optional] по какому полю проекта проидексировать список
-	 * @param string $project_id [optional] get issues from the project with the given id
-	 * @param string $tracker_id [optional] get issues from the tracker with the given id
-	 * @param string $status_id [optional] get issues with the given status id only (you can use * to get open and closed issues)
-	 * @param string $assigned_to_id [optional] get issues which are assigned to the given user id
+	 * @param array $params [optional] параметры:
+	 * string $params['project_id'] [optional] get issues from the project with the given id
+	 * int $params['tracker_id'] [optional] get issues from the tracker with the given id
+	 * int $params['status_id'] [optional] get issues with the given status id only (you can use * to get open and closed issues)
+	 * int $params['assigned_to_id'] [optional] get issues which are assigned to the given user id
 	 * @return array
 	 */
-	public static function readIssues($index = 'id', $project_id = false, $tracker_id = false, $status_id = false, $assigned_to_id = false) {
+	public static function readIssues($index = 'id', $params = null) {
 		static $cached;
 		
 		$query = '';
-		$project_id and $query .= "&project_id={$project_id}";
-		$tracker_id and $query .= "&tracker_id={$tracker_id}";
-		$status_id and $query .= "&status_id={$status_id}";
-		$assigned_to_id and $query .= "&assigned_to_id={$assigned_to_id}";
 		
-		$hash = md5($index.$query);
+		isset($params['sort']) and $query .= "&sort={$params['sort']}";
+		isset($params['project_id']) and $query .= "&project_id={$params['project_id']}";
+		isset($params['tracker_id']) and $query .= "&tracker_id={$params['tracker_id']}";
+		isset($params['status_id']) and $query .= "&status_id={$params['status_id']}";
+		isset($params['assigned_to_id']) and $query .= "&assigned_to_id={$params['assigned_to_id']}";
+		
+		isset($params['start']) and $start = $params['start'] or $start = 0;
+		isset($params['count']) and $count = $params['count'] or $count = PHP_INT_MAX;
+		
+		$hash = md5($index.','.$query.','.$start.','.$count);
 		
 		if (!isset($cached[$hash])) {
 			if ($cached[$hash] = Persistent::getData(__METHOD__.'.'.$hash))
@@ -336,8 +329,7 @@ class RedmineModel extends RedmineConnector {
 			}
 			
 			try {
-				for ($cached[$hash] = array(
-				), $offset = 0, $limit = 50; count($data = self::xml2array(self::runRequest("issues.xml?offset={$offset}&limit={$limit}{$query}"), $index)); $offset += $limit) {
+				for ($cached[$hash] = array(), $offset = $start, $limit = $count < 50 ? $count : 50; count($cached[$hash]) < $count and count($data = self::xml2array(self::runRequest("issues.xml?offset={$offset}&limit={$limit}{$query}"), $index)); $offset += $limit) {
 					$cached[$hash] += $data;
 				}
 			}
@@ -346,8 +338,8 @@ class RedmineModel extends RedmineConnector {
 			}
 			
 			// много данных не влезет, разобъем по 100
-			if (($count = count($cached[$hash])) > 500) {
-				for ($index = 0, $offset = 0, $limit = 500; $offset < $count; $index++, $offset += $limit) {
+			if (($count = count($cached[$hash])) > 100) {
+				for ($index = 0, $offset = 0, $limit = 100; $offset < $count; $index++, $offset += $limit) {
 					$partial = array_slice($cached[$hash], $offset, $limit, true);
 					// а еще - увеличим время хранения - процедура получения слишком дорого обходится
 					Persistent::setData(__METHOD__.'.'.$hash.'.'.$index, $partial, '+10 minutes');
@@ -355,6 +347,45 @@ class RedmineModel extends RedmineConnector {
 			} else {
 				Persistent::setData(__METHOD__.'.'.$hash, $cached[$hash]);
 			}
+		}
+		
+		return $cached[$hash];
+	}
+	
+	/**
+	 * получить число задач
+	 * @param array $params [optional] параметры:
+	 * string $params['project_id'] [optional] get issues from the project with the given id
+	 * int $params['tracker_id'] [optional] get issues from the tracker with the given id
+	 * int $params['status_id'] [optional] get issues with the given status id only (you can use * to get open and closed issues)
+	 * int $params['assigned_to_id'] [optional] get issues which are assigned to the given user id
+	 * @return array
+	 */
+	public static function readIssuesCount($params = null) {
+		static $cached;
+		
+		$query = '';
+		
+		isset($params['project_id']) and $query .= "&project_id={$params['project_id']}";
+		isset($params['tracker_id']) and $query .= "&tracker_id={$params['tracker_id']}";
+		isset($params['status_id']) and $query .= "&status_id={$params['status_id']}";
+		isset($params['assigned_to_id']) and $query .= "&assigned_to_id={$params['assigned_to_id']}";
+		
+		$hash = md5($query);
+		
+		if (!isset($cached[$hash])) {
+			if ($cached[$hash] = Persistent::getData(__METHOD__.'.'.$hash))
+				return $cached[$hash];
+				
+			try {
+				$data = self::xml2array(self::runRequest("issues.xml?offset=".PHP_INT_MAX."&limit=1{$query}"), null, true);
+				$cached[$hash] = $data['total_count'];
+			}
+			catch(CHttpException $e) {
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			}
+			
+			Persistent::setData(__METHOD__.'.'.$hash, $cached[$hash]);
 		}
 		
 		return $cached[$hash];
@@ -449,8 +480,7 @@ class RedmineModel extends RedmineConnector {
 				return $cached[$hash];
 				
 			try {
-				for ($cached[$hash] = array(
-				), $offset = 0, $limit = 50; count($data = self::xml2array(self::runRequest("projects.xml?offset={$offset}&limit={$limit}"), $index)); $offset += $limit) {
+				for ($cached[$hash] = array(), $offset = 0, $limit = 50; count($data = self::xml2array(self::runRequest("projects.xml?offset={$offset}&limit={$limit}"), $index)); $offset += $limit) {
 					$cached[$hash] += $data;
 				}
 			}
@@ -553,8 +583,7 @@ class RedmineModel extends RedmineConnector {
 				return $cached[$hash];
 				
 			try {
-				for ($cached[$hash] = array(
-				), $offset = 0, $limit = 50; count($data = self::xml2array($u = self::runRequest("users.xml?offset={$offset}&limit={$limit}"), $index)); $offset += $limit) {
+				for ($cached[$hash] = array(), $offset = 0, $limit = 50; count($data = self::xml2array($u = self::runRequest("users.xml?offset={$offset}&limit={$limit}"), $index)); $offset += $limit) {
 					$cached[$hash] += $data;
 				}
 			}
@@ -742,8 +771,7 @@ class RedmineModel extends RedmineConnector {
 				return $cached[$hash];
 				
 			try {
-				for ($cached[$hash] = array(
-				), $offset = 0, $limit = 50; count($data = self::xml2array(self::runRequest("news.xml?offset={$offset}&limit={$limit}"), $index)); $offset += $limit) {
+				for ($cached[$hash] = array(), $offset = 0, $limit = 50; count($data = self::xml2array(self::runRequest("news.xml?offset={$offset}&limit={$limit}"), $index)); $offset += $limit) {
 					$cached[$hash] += $data;
 				}
 			}
@@ -1006,8 +1034,7 @@ class Redmine extends RedmineModel {
 			return $users;
 		}
 		catch(Exception $e) {
-			return array(
-			);
+			return array();
 		}
 	}
 	
@@ -1024,12 +1051,10 @@ class Redmine extends RedmineModel {
 				if ($login == trim(strtolower($key)))
 					return $data;
 			}
-			return array(
-			);
+			return array();
 		}
 		catch(Exception $e) {
-			return array(
-			);
+			return array();
 		}
 	}
 	
@@ -1046,14 +1071,12 @@ class Redmine extends RedmineModel {
 				if ($identifier == trim(strtolower($key)))
 					return $data;
 			}
-			return array(
-			);
+			return array();
 		}
 		catch(Exception $e) {
-			return array(
-			);
+			return array();
 		}
-	}	
+	}
 	
 	/**
 	 * получить процент готовности задачи

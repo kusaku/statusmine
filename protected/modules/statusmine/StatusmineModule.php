@@ -4,7 +4,7 @@
  */ 
 class StatusmineModule extends CWebModule {
 
-	public $defaultController = 'projects';
+	public $defaultController = 'layout';
 	
 	public $layout = 'standalone';
 	

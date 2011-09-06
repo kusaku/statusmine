@@ -7,9 +7,7 @@
 <?php elseif (isset($footer)): ?>
 <?php else : ?>
 <div class="time">
-	<?= date('H', $data['date']); ?>
-	<span>:</span>
-	<?= date('i', $data['date']); ?>
+	<?= date('H', $data['date']); ?><span>:</span><?= date('i', $data['date']); ?>
 </div>
 <?php $dow = array('пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'); ?>
 <?php $moy = array('январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'); ?>
@@ -20,5 +18,5 @@
 	<?= $moy[date('m', $data['date']) - 1]; ?>
 	<?= date('Y', $data['date']); ?>
 </div>
-<div class="innershadow full"></div>
+<div class="innershadow"></div>
 <?php endif; ?>

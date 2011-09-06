@@ -5,153 +5,89 @@ $(function(){
 
 	var lambda = arguments.callee;
 	
-	$('.full').live('inflate', function(event){
-		$(this).inflate();
-	});
-	
-	$('.fullw').live('inflate', function(event){
-		$(this).inflate({
-			height: 0
-		});
-	});
-	
-	$('.fullh').live('inflate', function(event){
-		$(this).inflate({
-			width: 0
-		});
-	});
-	
 	$(window).bind('resize', function(event){
-		$('body').css('font-size', $(document).width() / 64 + 'px');
-		$('.full, .fullw, .fullh').trigger('inflate');
+		$(document.body).css('font-size', $(document).width() / 64 + 'px');
 	}).trigger('resize');
 	
 	
-	$('.projectname .text').live('autoScroll', function(event){
+	$('.element.project .name .text, .element.project .description .text, .element.issue .subject .text, .element.issue .status .text').live('autoScroll', function(event){
+		event.stopPropagation();
+		
 		$(this).autoScroll();
-	}).trigger('autoScroll');
-	
-	
-	$('.element.projects').live('autoUpdate', function(event){
-		$(this).autoUpdate({
-			manual: true,
-			//interval: 60000,
-			action: function(dfd){
-				var elem = this;
-				jQuery.get(this.attr('href'), function(html){
-					elem.fadeOut(function(){
-						elem.html(html);
-						// простой вызов почему-то не работает
-						setTimeout(function(){
-							elem.find('.full, .fullw, fullh').trigger('inflate');
-							elem.find('.projectname .text').trigger('autoScroll');
-							// привязываем обновление посторочно
-							elem.find('.element.project').each(function(index, element){
-								$(this).find('.element.projectname, .element.projectprogress, .element.projectdeadline, .element.projectusers').trigger('autoUpdate');
-							});
-						}, 0);
-					}).fadeIn(function(){
-						dfd.resolveWith(elem);
-					});
-				}, 'html');
-			},
-		});
-	}).trigger('autoUpdate');
-	
-	
-	$('.element.projectname').live('autoUpdate', function(event){
-		$(this).autoUpdate({
-			interval: 1000,
-			action: function(dfd){
-				var elem = this;
-				jQuery.post(this.attr('href'), function(json){
-					elem.find('.text').fadeOut(function(){
-						$(this).text(json.data.name);
-					}).fadeIn(function(){
-						dfd.resolveWith(elem);
-					});
-				}, 'json');
-			},
-		})
 	});
 	
 	
-	$('.element.projectprogress').live('autoUpdate', function(event){
+	$('.element.project').live('autoUpdate', function(event){
+		event.stopPropagation();
+		
+		$(this).autoUpdate({
+			interval: 5000,
+			waitOthers: false,
+			action: function(dfd){
+				var elem = this;
+				jQuery.post(this.attr('href'), function(json){
+				
+					elem.find('.name .text').text(json.data.name);
+					
+					elem.find('.description .text').text(json.data.description);
+					
+					elem.find('.issuescount .text').fadeOut(function(){
+						$(this).text(json.data.issuescount);
+					}).fadeIn();
+					
+					elem.find('.update .text').fadeOut(function(){
+						$(this).text(json.data.update);
+					}).fadeIn();
+					
+					dfd.resolveWith(elem);
+					
+				}, 'json');
+			},
+		});
+	});
+	
+	
+	$('.element.issue').live('autoUpdate', function(event){
+		event.stopPropagation();
+		
 		$(this).autoUpdate({
 			interval: 1000,
 			action: function(dfd){
 				var elem = this;
 				jQuery.post(this.attr('href'), function(json){
-					elem.find('.text').fadeOut(function(){
-						$(this).text(json.data.name);
+				
+					elem.find('.subject .text').text(json.data.subject);
+					
+					elem.find('.status .text').text(json.data.status);
+					
+					elem.find('.progress .text').fadeOut(function(){
+						$(this).text(json.data.percent + '%');
 					}).fadeIn();
 					
 					elem.find('.bar').animate({
 						'width': json.data.percent + '%',
-						'background-color': json.data.color,
-					}, {
-						step: function(now, fx){
-							elem.find('.bar .full').inflate();
-						},
-						complete: function(){
-							dfd.resolveWith(elem);
-						},
+						'background-color': json.data.progress_color,
 					});
-				}, 'json');
-			},
-		});
-	});
-	
-	
-	$('.element.projectdeadline').live('autoUpdate', function(event){
-		$(this).autoUpdate({
-			interval: 1000,
-			action: function(dfd){
-				var elem = this;
-				jQuery.post(this.attr('href'), function(json){
-					elem.find('.text').fadeOut(function(){
-						$(this).text(json.data.name);
+					
+					elem.find('.deadline .text').fadeOut(function(){
+						$(this).text(json.data.deadline);
 					}).fadeIn();
 					
-					elem.find('.inset').animate({
-						'background-color': json.data.color,
-					}, {
-						complete: function(){
-							dfd.resolveWith(elem);
-						},
+					elem.find('.deadline .inset').animate({
+						'background-color': json.data.deadline_color,
 					});
+					
+					dfd.resolveWith(elem);
+					
 				}, 'json');
 			},
 		});
 	});
 	
 	
-	$('.element.projectusers').live('autoUpdate', function(event){
-		$(this).autoUpdate({
-			interval: 1000,
-			action: function(dfd){
-				var elem = this;
-				jQuery.get(this.attr('href'), function(html){
-					elem.fadeOut(function(){
-						elem.html(html);
-						// простой вызов почему-то не работает
-						setTimeout(function(){
-							elem.find('.full').trigger('inflate')
-						}, 0);
-					}).fadeIn(function(){
-						dfd.resolveWith(elem);
-					});
-				}, 'html');
-			},
-		});
-	});
-	
-	// привязываем обновление посторочно
-	$('.element.project').each(function(index, element){
-		$(this).find('.element.projectname, .element.projectprogress, .element.projectdeadline, .element.projectusers').trigger('autoUpdate');
-	});
-	
 	$('.element.calendar').live('autoUpdate', function(event){
+		event.stopPropagation();
+		
 		// разностное время
 		var diffDate = 0;
 		
@@ -196,7 +132,8 @@ $(function(){
 				dfd.resolveWith(this);
 			}
 		});
-	}).trigger('autoUpdate');
+	});
+	
 	
 	$('.element').live('element', function(event){
 		$(this).bind('mouseover', function(event){
@@ -219,5 +156,25 @@ $(function(){
 			event.stopPropagation();
 			window.location.href = $(this).attr('href');
 		});
-	}).trigger('element');
+	});
+	
+	
+	$(document.body).animate({
+		'opacity': 1
+	}, 'slow', function(){
+		var triggerBehaviors = function(){
+			$('.element').trigger('element');
+			$('.element.project').trigger('autoUpdate');
+			$('.element.issue').trigger('autoUpdate');
+			$('.element.calendar').trigger('autoUpdate');
+			$('.text').trigger('autoScroll');
+		};
+		
+		var layout = $('.element.layout');
+		if (layout.length) {
+			layout.load(layout.attr('href'), triggerBehaviors);
+		} else {
+			triggerBehaviors();
+		}
+	});
 });

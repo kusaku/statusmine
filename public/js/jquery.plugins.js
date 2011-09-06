@@ -3,51 +3,6 @@
  */
 (function($){
 	$.fn.extend({
-		inflate: function(data){
-			var options = {
-				width: 1,
-				height: 1,
-			};
-			
-			var methods = {
-				init: function(){
-					$(this).data('inflate', {
-						oldStyle: $(this).attr('style')
-					});
-					options.width && $(this).css('width', options.width * ($(this).parent().width() - $(this).outerWidth(true) + $(this).width()) + 'px');
-					options.height && $(this).css('height', options.height * ($(this).parent().height() - $(this).outerHeight(true) + $(this).height()) + 'px');
-				},
-				
-				destroy: function(){
-					$(this).data('inflate') && $(this).removeAttr('style').attr('style', $(this).data('inflate').oldStyle).removeData('inflate');
-				},
-			};
-			
-			switch (typeof data) {
-				case 'string':
-					if (data in methods) {
-						this.each(function(){
-							methods[data].call($(this));
-						});
-					}
-					else {
-						$.error('Method ' + data + ' does not exist');
-					}
-					break;
-					
-				case 'object':
-					var options = $.extend(options, data);
-				default:
-					this.each(function(){
-						methods['init'].call($(this))
-					});
-					break;
-			}
-			return this;
-		}
-	});
-	
-	$.fn.extend({
 		autoUpdate: function(data){
 			var options = {
 				manual: false,
@@ -87,17 +42,24 @@
 						var lambda = arguments.callee;
 						
 						if (settings.waitOthers) {
-							window._dfd_pipe = (window._dfd_pipe) ? window._dfd_pipe.pipe(lambda, lambda) : dfd.pipe(lambda, lambda)
+							window._dfd_pipe = (window._dfd_pipe) ? window._dfd_pipe.pipe(lambda, lambda) : dfd.pipe(lambda, lambda);
 						}
 						else {
 							dfd.always(lambda)
 						}
 						
-						settings._tid = setTimeout(function(){
-							methods['update'].call(elem);
-						}, settings.interval);
-						
-						return dfd;
+						if (justStarted) {
+							settings._tid = setTimeout(function(){
+								dfd.resolveWith(elem);
+							}, 0);
+							return dfd;
+						}
+						else {
+							settings._tid = setTimeout(function(){
+								methods['update'].call(elem);
+							}, settings.interval);
+							return dfd;
+						}
 					})(true);
 				},
 				

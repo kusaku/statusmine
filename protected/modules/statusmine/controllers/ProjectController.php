@@ -3,20 +3,59 @@
  *
  */
 class ProjectController extends ElementController {
-	public function actionView($id = false) {
+	public function actionView($id) {
 		$projects = Redmine::readProjects();
 		foreach ($projects as $cid=>$project)
 			if (isset($project['parent']) and $project['parent']['id'] == $id)
 				$childs[] = $cid;
-		$data = array('childs'=>isset($childs) ? $childs : null);
+		$data = array(
+			//
+			'name'=>$projects[$id]['name'],
+			//
+			'description'=>$projects[$id]['description'],
+			//
+			'update'=>date('Y.m.d', strtotime($projects[$id]['updated_on'])),
+			//
+			'issuescount'=>Redmine::readIssuesCount(array(
+				'project_id'=>$id,'status_id'=>'*'
+			)),
+			//
+			'childs'=>isset($childs) ? $childs : null
+		);
 		parent::actionView($data);
 	}
 	
-	public function actionRender($id = false) {
-		parent::actionRender();
+	public function actionRender($id) {
+		$project = Redmine::readProject($id);
+		$data = array(
+			//
+			'name'=>$project['name'],
+			//
+			'description'=>$project['description'],
+			//
+			'update'=>date('Y.m.d', strtotime($project['updated_on'])),
+			//
+			'issuescount'=>Redmine::readIssuesCount(array(
+				'project_id'=>$id,'status_id'=>'*'
+			))
+		);
+		parent::actionRender($data);
 	}
 	
-	public function actionStatus($id = false) {
-		parent::actionStatus();
+	public function actionStatus($id) {
+		$project = Redmine::readProject($id);
+		$data = array(
+			//
+			'name'=>$project['name'],
+			//
+			'description'=>$project['description'],
+			//
+			'update'=>date('Y.m.d', strtotime($project['updated_on'])),
+			//
+			'issuescount'=>Redmine::readIssuesCount(array(
+				'project_id'=>$id,'status_id'=>'*'
+			))
+		);
+		parent::actionStatus($data);
 	}
 }

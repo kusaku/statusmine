@@ -11,9 +11,10 @@ class TestController extends Controller {
 		//print_r($var);
 		//$var = Persistent::model()->var or
 		//$var = Redmine::createIssue(array('subject'=>'Пример', 'project_id'=>'suptask', 'priority_id'=>4));
-		$var = Redmine::readIssues();
+		//$var = Redmine::readProject('sites');
+		$var = Redmine::readProjects();
 		
-		ksort($var);
+		//ksort($var);
 		
 		/*foreach ($var as $key=>$value) {
 		 try {

@@ -3,12 +3,12 @@
  *
  */
 class SubprojectsController extends ElementController {
-	public function actionView($id = false) {
+	public function actionView($id) {
 		$projects = Redmine::readProjects();
 		foreach ($projects as $cid=>$project)
 			if (isset($project['parent']) and $project['parent']['id'] == $id)
 				$childs[] = $cid;
-		$data = array('childs'=>isset($childs) ? $childs : null);
+		$data = array('project_name'=>$projects[$id]['name'], 'childs'=>isset($childs) ? $childs : null);
 		parent::actionView($data);
 	}
 	
@@ -17,7 +17,7 @@ class SubprojectsController extends ElementController {
 		foreach ($projects as $cid=>$project)
 			if (isset($project['parent']) and $project['parent']['id'] == $id)
 				$childs[] = $cid;
-		$data = array('childs'=>isset($childs) ? $childs : null);
+		$data = array('project_name'=>$projects[$id]['name'], 'childs'=>isset($childs) ? $childs : null);
 		parent::actionRender($data);
 	}
 	
@@ -26,7 +26,7 @@ class SubprojectsController extends ElementController {
 		foreach ($projects as $cid=>$project)
 			if (isset($project['parent']) and $project['parent']['id'] == $id)
 				$childs[] = $cid;
-		$data = array('childs'=>isset($childs) ? $childs : null);
+		$data = array('project_name'=>$projects[$id]['name'], 'childs'=>isset($childs) ? $childs : null);
 		parent::actionStatus($data);
 	}
 }
