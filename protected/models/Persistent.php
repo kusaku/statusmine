@@ -1,6 +1,4 @@
 <?php 
-# (c) 2011 aks - FabricaSaitov.ru
-
 /**
  * постоянное хранилище объектов,
  * ХХХ БУДЬ ВНИМАТЕЛЕН! ХХХ
@@ -131,7 +129,7 @@ class Persistent extends CActiveRecord {
  *
  * class MailQueue extends ObjectQueue {}
  *
- * MailQueue:enQueue($mail);
+ * MailQueue::enQueue($mail);
  *
  */
 class ObjectQueue extends Persistent {

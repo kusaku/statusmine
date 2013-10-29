@@ -14,8 +14,8 @@
 	<div class="progress">
 		<span class="text">Прогресс</span>
 	</div>
-	<div class="deadline">
-		<span class="text">Deadline</span>
+	<div class="updated">
+		<span class="text">Обновлена</span>
 	</div>
 </div>
 <?php elseif (isset($footer)): ?>
@@ -36,9 +36,9 @@
 		<span class="text"><?= $data['percent']; ?>%</span>
 	</div>
 </div>
-<div class="deadline">
-	<div class="inset round" style="background-color:<?= $data['deadline_color']; ?>;"></div>
-	<span class="text"><?= $data['deadline']; ?></span>
+<div class="updated">
+	<div class="inset round" style="background-color:<?= $data['updated_color']; ?>;"></div>
+	<span class="text"><?= $data['updated_on']; ?></span>
 </div>
 <?php //if (isset($data['childs'])): ?>
 <?php //$this->forward('subprojects/render', false); ?>

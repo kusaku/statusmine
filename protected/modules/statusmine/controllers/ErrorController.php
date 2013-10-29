@@ -1,19 +1,19 @@
-<?php 
+<?php
 /**
  *
  */
 class ErrorController extends ElementController {
-	public function actionView($id = false) {
+	public function actionView($id = FALSE) {
 		$data = Yii::app()->errorHandler->error;
 		parent::actionView($data);
 	}
-	
-	public function actionRender($id = false) {
+
+	public function actionRender($id = FALSE) {
 		$data = Yii::app()->errorHandler->error;
 		parent::actionRender();
 	}
-	
-	public function actionStatus($id = false) {
+
+	public function actionStatus($id = FALSE) {
 		$data = Yii::app()->errorHandler->error;
 		parent::actionStatus();
 	}

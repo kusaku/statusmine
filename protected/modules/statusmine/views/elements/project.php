@@ -19,6 +19,14 @@
 	</div>
 </div>
 <?php elseif (isset($footer)): ?>
+<?php if (isset($data['childs'])): ?>
+<div class="header standalone <?= $this->getId(); ?>">
+    <div class="projects">
+        <span class="text">Подпроекты</span>
+    </div>
+</div>
+<?php $this->forward('subprojects/render', false); ?>
+<?php endif; ?>
 <?php else : ?>
 <?php unset($_SERVER['HTTP_X_REQUESTED_WITH']); ?>
 <div class="name">
@@ -40,7 +48,4 @@
 <?php $temp = $_GET['id']; ?>
 <?php $this->forward('issues/render', false); ?>
 <?php $_GET['id'] = $temp; ?>
-<?php if (isset($data['childs'])): ?>
-<?php $this->forward('subprojects/render', false); ?>
-<?php endif; ?>
 <?php endif; ?>

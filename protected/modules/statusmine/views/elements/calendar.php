@@ -7,13 +7,13 @@
 <?php elseif (isset($footer)): ?>
 <?php else : ?>
 <div class="time">
-	<?= date('H', $data['date']); ?><span>:</span><?= date('i', $data['date']); ?>
+		<?= date('H', $data['date']); ?><span>:</span><?= date('i', $data['date']); ?>
 </div>
 <?php $dow = array('пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'); ?>
 <?php $moy = array('январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'); ?>
 <div class="date">
 	<?= $dow[date('N', $data['date']) - 1]; ?>
-	, 
+	,
 	<?= date('d', $data['date']); ?>
 	<?= $moy[date('m', $data['date']) - 1]; ?>
 	<?= date('Y', $data['date']); ?>

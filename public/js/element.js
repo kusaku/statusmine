@@ -4,93 +4,93 @@
 $(function(){
 
 	var lambda = arguments.callee;
-	
+
 	$(window).bind('resize', function(event){
 		$(document.body).css('font-size', $(document).width() / 64 + 'px');
 	}).trigger('resize');
-	
-	
+
+
 	$('.element.project .name .text, .element.project .description .text, .element.issue .subject .text, .element.issue .status .text').live('autoScroll', function(event){
 		event.stopPropagation();
-		
+
 		$(this).autoScroll();
 	});
-	
-	
-	$('.element.project').live('autoUpdate', function(event){
+
+
+	$('.element.project').live('autoUpdate', function (event) {
 		event.stopPropagation();
-		
+
 		$(this).autoUpdate({
-			interval: 5000,
-			waitOthers: false,
-			action: function(dfd){
+			interval:5000,
+			waitOthers:false,
+			action:function (dfd) {
 				var elem = this;
-				jQuery.post(this.attr('href'), function(json){
-				
+				jQuery.post(this.attr('href'), function (json) {
+
 					elem.find('.name .text').text(json.data.name);
-					
+
 					elem.find('.description .text').text(json.data.description);
-					
-					elem.find('.issuescount .text').fadeOut(function(){
+
+					elem.find('.issuescount .text').fadeOut(function () {
 						$(this).text(json.data.issuescount);
 					}).fadeIn();
-					
-					elem.find('.update .text').fadeOut(function(){
+
+					elem.find('.update .text').fadeOut(function () {
 						$(this).text(json.data.update);
 					}).fadeIn();
-					
+
 					dfd.resolveWith(elem);
-					
+
 				}, 'json');
 			},
 		});
 	});
-	
-	
+
+
 	$('.element.issue').live('autoUpdate', function(event){
 		event.stopPropagation();
-		
+
 		$(this).autoUpdate({
 			interval: 1000,
 			action: function(dfd){
 				var elem = this;
 				jQuery.post(this.attr('href'), function(json){
-				
+
 					elem.find('.subject .text').text(json.data.subject);
-					
+
 					elem.find('.status .text').text(json.data.status);
-					
+
 					elem.find('.progress .text').fadeOut(function(){
 						$(this).text(json.data.percent + '%');
 					}).fadeIn();
-					
+
 					elem.find('.bar').animate({
 						'width': json.data.percent + '%',
 						'background-color': json.data.progress_color,
 					});
-					
+
 					elem.find('.deadline .text').fadeOut(function(){
 						$(this).text(json.data.deadline);
 					}).fadeIn();
-					
+
 					elem.find('.deadline .inset').animate({
 						'background-color': json.data.deadline_color,
 					});
-					
+
 					dfd.resolveWith(elem);
-					
+
 				}, 'json');
 			},
 		});
 	});
-	
-	
+
+
 	$('.element.calendar').live('autoUpdate', function(event){
 		event.stopPropagation();
-		
+
 		// разностное время
 		var diffDate = 0;
-		
+
 		$(this).autoUpdate({
 			interval: 60000,
 			waitOthers: false,
@@ -102,7 +102,7 @@ $(function(){
 				}, 'json');
 			},
 		});
-		
+
 		$(this).find('.time').autoUpdate({
 			interval: 500,
 			waitOthers: false,
@@ -117,7 +117,7 @@ $(function(){
 				dfd.resolveWith(this);
 			}
 		});
-		
+
 		$(this).find('.date').autoUpdate({
 			interval: 10000,
 			waitOthers: false,
@@ -133,8 +133,8 @@ $(function(){
 			}
 		});
 	});
-	
-	
+
+
 	$('.element').live('element', function(event){
 		$(this).bind('mouseover', function(event){
 			event.stopPropagation();
@@ -143,7 +143,7 @@ $(function(){
 				'cursor': 'pointer'
 			});
 		});
-		
+
 		$(this).bind('mouseout', function(event){
 			event.stopPropagation();
 			$(this).css({
@@ -151,14 +151,14 @@ $(function(){
 				'cursor': 'default'
 			});
 		});
-		
+
 		$(this).bind('click', function(event){
 			event.stopPropagation();
 			window.location.href = $(this).attr('href');
 		});
 	});
-	
-	
+
+
 	$(document.body).animate({
 		'opacity': 1
 	}, 'slow', function(){
@@ -169,7 +169,7 @@ $(function(){
 			$('.element.calendar').trigger('autoUpdate');
 			$('.text').trigger('autoScroll');
 		};
-		
+
 		var layout = $('.element.layout');
 		if (layout.length) {
 			layout.load(layout.attr('href'), triggerBehaviors);

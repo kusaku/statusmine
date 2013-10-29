@@ -1,21 +1,4 @@
 <?php 
-/*
- * This file is part of StatusMine.
- *
- * StatusMine is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * StatusMine is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with MailTeleport. If not, see <http://www.gnu.org/licenses/>.
- */
-
 /**
  * коннектор Redmine
  */
@@ -300,7 +283,7 @@ class RedmineModel extends RedmineConnector {
 	 * int $params['assigned_to_id'] [optional] get issues which are assigned to the given user id
 	 * @return array
 	 */
-	public static function readIssues($index = 'id', $params = null) {
+	public static function readIssues($index = 'id', $params = NULL) {
 		static $cached;
 		
 		$query = '';
@@ -340,7 +323,7 @@ class RedmineModel extends RedmineConnector {
 			// много данных не влезет, разобъем по 100
 			if (($count = count($cached[$hash])) > 100) {
 				for ($index = 0, $offset = 0, $limit = 100; $offset < $count; $index++, $offset += $limit) {
-					$partial = array_slice($cached[$hash], $offset, $limit, true);
+					$partial = array_slice($cached[$hash], $offset, $limit, TRUE);
 					// а еще - увеличим время хранения - процедура получения слишком дорого обходится
 					Persistent::setData(__METHOD__.'.'.$hash.'.'.$index, $partial, '+10 minutes');
 				}
@@ -361,7 +344,7 @@ class RedmineModel extends RedmineConnector {
 	 * int $params['assigned_to_id'] [optional] get issues which are assigned to the given user id
 	 * @return array
 	 */
-	public static function readIssuesCount($params = null) {
+	public static function readIssuesCount($params = NULL) {
 		static $cached;
 		
 		$query = '';
@@ -378,7 +361,7 @@ class RedmineModel extends RedmineConnector {
 				return $cached[$hash];
 				
 			try {
-				$data = self::xml2array(self::runRequest("issues.xml?offset=".PHP_INT_MAX."&limit=1{$query}"), null, true);
+				$data = self::xml2array(self::runRequest("issues.xml?offset=".PHP_INT_MAX."&limit=1{$query}"), NULL, TRUE);
 				$cached[$hash] = $data['total_count'];
 			}
 			catch(CHttpException $e) {
@@ -441,7 +424,7 @@ class RedmineModel extends RedmineConnector {
 	 */
 	public static function deleteIssue($issue_id) {
 		try {
-			return self::xml2array(self::runRequest("issues/{$issue_id}.xml", null, 'DELETE'));
+			return self::xml2array(self::runRequest("issues/{$issue_id}.xml", NULL, 'DELETE'));
 		}
 		catch(CHttpException $e) {
 			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
@@ -545,17 +528,18 @@ class RedmineModel extends RedmineConnector {
 	 */
 	public static function deleteProject($project_id) {
 		try {
-			return self::xml2array(self::runRequest("projects/{$project_id}.xml", null, 'DELETE'));
+			return self::xml2array(self::runRequest("projects/{$project_id}.xml", NULL, 'DELETE'));
 		}
 		catch(CHttpException $e) {
 			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
 		}
 	}
 
-	
 	/**
 	 * создать пользователя
 	 * @param array $data параметы
+	 *
+	 * @throws CHttpException
 	 * @return array
 	 */
 	public static function createUser($data) {
@@ -567,10 +551,12 @@ class RedmineModel extends RedmineConnector {
 			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
 		}
 	}
-	
+
 	/**
 	 * получить список пользователей
 	 * @param string $index [optional] по какому полю элемента проидексировать список
+	 *
+	 * @throws CHttpException
 	 * @return array
 	 */
 	public static function readUsers($index = 'id') {
@@ -648,7 +634,7 @@ class RedmineModel extends RedmineConnector {
 	 */
 	public static function deleteUser($user_id) {
 		try {
-			return self::xml2array(self::runRequest("users/{$user_id}.xml", null, 'DELETE'));
+			return self::xml2array(self::runRequest("users/{$user_id}.xml", NULL, 'DELETE'));
 		}
 		catch(CHttpException $e) {
 			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
@@ -748,7 +734,7 @@ class RedmineModel extends RedmineConnector {
 	 */
 	public static function deleteTimeEntry($time_entry_id) {
 		try {
-			return self::xml2array(self::runRequest("time_entries/{$time_entry_id}.xml", null, 'DELETE'));
+			return self::xml2array(self::runRequest("time_entries/{$time_entry_id}.xml", NULL, 'DELETE'));
 		}
 		catch(CHttpException $e) {
 			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
@@ -853,7 +839,7 @@ class RedmineModel extends RedmineConnector {
 	 */
 	public static function deleteIssueRelation($issue_id) {
 		try {
-			return self::xml2array(self::runRequest("relation/{$issue_id}.xml", null, 'DELETE'));
+			return self::xml2array(self::runRequest("relation/{$issue_id}.xml", NULL, 'DELETE'));
 		}
 		catch(CHttpException $e) {
 			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
@@ -955,7 +941,7 @@ class RedmineModel extends RedmineConnector {
 	 */
 	public static function deleteVersion($version_id) {
 		try {
-			return self::xml2array(self::runRequest("versions/{$version_id}.xml", null, 'DELETE'));
+			return self::xml2array(self::runRequest("versions/{$version_id}.xml", NULL, 'DELETE'));
 		}
 		catch(CHttpException $e) {
 			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());

@@ -16,8 +16,8 @@
 	<div class="progress">
 		<span class="text">Прогресс</span>
 	</div>
-	<div class="deadline">
-		<span class="text">Deadline</span>
+	<div class="updated">
+		<span class="text">Обновлена</span>
 	</div>
 </div>
 <?php unset($_SERVER['HTTP_X_REQUESTED_WITH']); ?>

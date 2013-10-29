@@ -1,20 +1,20 @@
-<?php 
+<?php
 /**
  *
  */
 class LayoutController extends ElementController {
 
-    public $layout = '/layouts/main';
-	
-	public function actionView($id = false) {
-		parent::actionView(array('preloader'=>true));
+	public $layout = '/layouts/main';
+
+	public function actionView($id = FALSE) {
+		parent::actionView(array('preloader' => TRUE));
 	}
-	
-	public function actionRender($id = false) {
-		parent::actionRender(array('preloader'=>false));
+
+	public function actionRender($id = FALSE) {
+		parent::actionRender(array('preloader' => FALSE));
 	}
-	
-	public function actionStatus($id = false) {
-		parent::actionStatus(array('preloader'=>false));
+
+	public function actionStatus($id = FALSE) {
+		parent::actionStatus(array('preloader' => FALSE));
 	}
 }
